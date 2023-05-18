@@ -1,0 +1,14 @@
+{
+  "helloWorld": "Hello World!",
+  "disconnected": "Disconnected",
+  "connected": "Connected",
+  "connecting": "Connecting…",
+  "scanning": "Searching",
+  "disconnect": "Disconnect",
+  "connect": "Connect to device",
+  "grantPermission": "Grant permission",
+  "needPermissions": "We need bluetooth connect, scan and precise location permissions for the whole mechanism works.",
+  "permissionsDenied": "Permission is denied",
+  "grantInSettings": "Please grant permissions in the settings",
+  "ok": "OK"
+}
