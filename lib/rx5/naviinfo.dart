@@ -1,5 +1,5 @@
-import '/rx5/base_incoming.dart';
-import 'base_outgoing.dart';
+import '/rx5/base-incoming.dart';
+import 'base-outgoing.dart';
 
 class NaviInfo extends BaseOutgoing {
   int navimode = 0;

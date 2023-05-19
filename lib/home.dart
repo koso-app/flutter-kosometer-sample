@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kosometer/screen/page-log.dart';
 
 import 'screen/page-connect.dart';
 import 'screen/page-navigation.dart';
@@ -29,7 +30,7 @@ class HomeScreen extends StatelessWidget {
             PageConnect(),
             PageReceived(),
             PageNavigation(),
-            Placeholder()
+            PageLog()
           ],
         ),
       ),

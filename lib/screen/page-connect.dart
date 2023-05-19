@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '/utils/shared_preference.dart';
+import '/utils/shared-preference.dart';
 
-import '../channel/flutter_talkie.dart';
-import '../manager/connect_manager.dart';
+import '../channel/flutter-talkie.dart';
+import '../manager/connect-manager.dart';
 
 class PageConnect extends StatefulWidget {
   const PageConnect({Key? key}) : super(key: key);

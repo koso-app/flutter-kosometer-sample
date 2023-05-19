@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kosometer/channel/flutter_talkie.dart';
+import 'package:kosometer/channel/flutter-talkie.dart';
 import 'package:kosometer/rx5/naviinfo.dart';
 
 class PageNavigation extends StatefulWidget {

@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:geolocator/geolocator.dart';
 
-import '/channel/flutter_talkie.dart';
-import '/utils/shared_preference.dart';
+import '/channel/flutter-talkie.dart';
+import '/utils/shared-preference.dart';
 
 enum ConnectState { Disconnected, Discovering, Connected, Connecting }
 

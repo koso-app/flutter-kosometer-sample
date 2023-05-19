@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:kosometer/channel/flutter_talkie.dart';
-import 'package:kosometer/rx5/incoming_info1.dart';
-import 'package:kosometer/rx5/incoming_info2.dart';
+import 'package:kosometer/channel/flutter-talkie.dart';
+import 'package:kosometer/rx5/incoming-info1.dart';
+import 'package:kosometer/rx5/incoming-info2.dart';
 
-import '../rx5/base_incoming.dart';
+import '../rx5/base-incoming.dart';
 
 class PageReceived extends StatefulWidget {
   const PageReceived({Key? key}) : super(key: key);

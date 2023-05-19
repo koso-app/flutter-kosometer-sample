@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import '/manager/connect_manager.dart';
-import '/rx5/base_incoming.dart';
-import '/rx5/incoming_info1.dart';
-import '/rx5/incoming_info2.dart';
+import '/manager/connect-manager.dart';
+import '/rx5/base-incoming.dart';
+import '/rx5/incoming-info1.dart';
+import '/rx5/incoming-info2.dart';
 import '/rx5/naviinfo.dart';
 import '/utils/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';

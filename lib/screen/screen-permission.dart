@@ -4,7 +4,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:io' show Platform;
 
-import '/utils/permission_util.dart';
+import '/utils/permission-util.dart';
 
 class PermissionScreen extends StatelessWidget {
   VoidCallback callback;
