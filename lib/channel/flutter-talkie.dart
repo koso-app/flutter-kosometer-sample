@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:kosometer/manager/log-manager.dart';
 import '/manager/connect-manager.dart';
 import '/rx5/base-incoming.dart';
 import '/rx5/incoming-info1.dart';
@@ -53,6 +54,7 @@ class FlutterTalkie {
           var cmd = IncomingInfo1.fromJson(map);
           _incomingSink.add(cmd);
           keepLastIncomingInfo1(json);
+          LogManager.get().push(LogItem(title: "incoming info 1", content: "${cmd.toString()}", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 2));
           break;
         case 'incominginfo2':
           var json = call.arguments;
@@ -60,6 +62,7 @@ class FlutterTalkie {
           var cmd = IncomingInfo2.fromJson(map);
           _incomingSink.add(cmd);
           keepLastIncomingInfo2(json);
+          LogManager.get().push(LogItem(title: "incoming info 2", content: "${cmd.toString()}", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 2));
           break;
         case 'error':
           _errorSink.add(call.arguments);
@@ -72,31 +75,60 @@ class FlutterTalkie {
 
   Future sendStartForeground() => platform.invokeMethod('startforeground', null);
 
-  Future sendScan() => platform.invokeMethod('scan', null);
+  Future sendScan() async{
+    platform.invokeMethod('scan', null);
+    LogManager.get().push(LogItem(title: "scan", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 1));
+  }
 
-  Future sendLeScan() => platform.invokeMethod('lescan');
+  Future sendLeScan() async{
 
-  Future sendStopScan() => platform.invokeMethod('stopscan', null);
+    platform.invokeMethod('lescan');
+    LogManager.get().push(LogItem(title: "le scan", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 1));
+  }
 
-  Future sendConnect(String address) => platform.invokeMethod('connect', <String, dynamic>{
-        'address': address,
-      });
+  Future sendStopScan() async{
+    platform.invokeMethod('stopscan', null);
+    LogManager.get().push(LogItem(title: "stop scan", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 1));
+  }
 
-  Future sendLeConnect(String address) => platform.invokeMethod('leconnect', <String, dynamic>{
-    'address': address,
-  });
+  Future sendConnect(String address) async {
+    platform.invokeMethod('connect', <String, dynamic>{
+      'address': address,
+    });
+    LogManager.get().push(LogItem(title: "connect", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 1));
+  }
 
-  Future sendEnd() => platform.invokeMethod('disconnect', null);
+  Future sendLeConnect(String address) async{
+        platform.invokeMethod('leconnect', <String, dynamic>{
+          'address': address,
+        });
+        Future.delayed(Duration(seconds: 6)).then((value){
+          if(connectManager.state == ConnectState.Discovering) {
+            sendStopScan();
+            connectManager.state = ConnectState.Disconnected;
+          }
+        });
+        LogManager.get().push(LogItem(title: "le connect", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 1));
+      }
+
+  Future sendEnd() async {
+    platform.invokeMethod('disconnect', null);
+    LogManager.get().push(LogItem(title: "end", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 1));
+  }
 
   Future sendNaviInfo(NaviInfo cmd) {
+    LogManager.get().push(LogItem(title: "naviinfo", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 1));
     var j = json.encode(cmd);
     return platform.invokeMethod('naviinfo', <String, dynamic>{
       'naviinfo': j,
     });
+
   }
 
-  Future startAncs() => platform.invokeMethod('start_ancs');
-
+  Future startAncs() async{
+    LogManager.get().push(LogItem(title: "start ANCS", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 1));
+    platform.invokeMethod('start_ancs');
+  }
 
   /**
    * To update text message on notification

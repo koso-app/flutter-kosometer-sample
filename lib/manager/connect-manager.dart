@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:geolocator/geolocator.dart';
+import 'package:kosometer/manager/log-manager.dart';
 
 import '/channel/flutter-talkie.dart';
 import '/utils/shared-preference.dart';
@@ -20,9 +21,13 @@ class ConnectManager {
   set state(ConnectState value) {
     _state = value;
     _stateSink.add(value);
+
+    LogManager.get().push(LogItem(title: "${value.name}", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 0));
+
     switch(value){
       case ConnectState.Connected:
         _connected = true;
+        talkie.startAncs();
         break;
       case ConnectState.Disconnected:
         if(_connected){

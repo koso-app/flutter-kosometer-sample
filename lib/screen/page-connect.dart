@@ -15,7 +15,6 @@ class PageConnect extends StatefulWidget {
 }
 
 class _PageConnectState extends State<PageConnect> {
-
   ConnectState state = connectManager.state;
   String desc = "disconnected";
   StreamSubscription? sub;
@@ -24,13 +23,15 @@ class _PageConnectState extends State<PageConnect> {
   void initState() {
     super.initState();
     sub = connectManager.stateStream.listen((event) {
-      updateState(event);
+      setState(() {
+        updateState(event);
+      });
     });
-    // updateState(state);
   }
 
   @override
   Widget build(BuildContext context) {
+    updateState(state);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -47,7 +48,7 @@ class _PageConnectState extends State<PageConnect> {
             child: StreamBuilder<ConnectState>(
                 stream: connectManager.stateStream,
                 builder: (context, snapshot) {
-                  return getStateButton(snapshot.data ?? ConnectState.Disconnected);
+                  return getStateButton(snapshot.data ?? state);
                 })),
       ],
     );
@@ -62,7 +63,6 @@ class _PageConnectState extends State<PageConnect> {
   Widget getStateButton(ConnectState state) {
     switch (state) {
       case ConnectState.Disconnected:
-
         return SizedBox(
             width: double.infinity,
             child: ElevatedButton(
@@ -138,22 +138,20 @@ class _PageConnectState extends State<PageConnect> {
   }
 
   void updateState(ConnectState event) {
-    setState(() {
-      state = event;
-      switch(event){
-        case ConnectState.Connected:
-          desc = AppLocalizations.of(context).connected;
-          break;
-        case ConnectState.Discovering:
-          desc = AppLocalizations.of(context).scanning;
-          break;
-        case ConnectState.Connecting:
-          desc = AppLocalizations.of(context).connecting;
-          break;
-        default:
-          desc = AppLocalizations.of(context).disconnected;
-      }
-    });
+    state = event;
+    switch (event) {
+      case ConnectState.Connected:
+        desc = AppLocalizations.of(context).connected;
+        break;
+      case ConnectState.Discovering:
+        desc = AppLocalizations.of(context).scanning;
+        break;
+      case ConnectState.Connecting:
+        desc = AppLocalizations.of(context).connecting;
+        break;
+      default:
+        desc = AppLocalizations.of(context).disconnected;
+    }
   }
 }
 
