@@ -12,6 +12,7 @@ import com.koso.kosometer.ble.NotificationItem
 import com.koso.kosometer.service.BlePeripheralService
 import com.koso.kosometer.utils.ByteTools
 import com.koso.kosometer.utils.StringTools
+import java.lang.Math.min
 import java.nio.ByteBuffer
 import java.util.*
 
@@ -275,7 +276,6 @@ class AncsPeripheral(val context: Context) : BasePeripheral {
 
     var timestamp: Long = 0
     val postQueue: Queue<NotificationItem> = LinkedList<NotificationItem>()
-    var busy = false
     fun postAncsNotification(
         eventId: Int,
         categoryId: Int,
@@ -283,49 +283,67 @@ class AncsPeripheral(val context: Context) : BasePeripheral {
         subTitle: String = "",
         message: String = ""
     ) {
-        val time = System.currentTimeMillis()
-        val notifyItem = NotificationItem(eventId, categoryId, title, subTitle, message)
-
+        val notifyItem = NotificationItem(
+            eventId,
+            categoryId,
+            title.substring(0, min(10, title.length)),
+            subTitle.substring(0, min(30, subTitle.length)),
+            message.substring(0, min(30, message.length))
+        )
 
         notifications[notifyItem.notifyUid] = notifyItem
-        if (postQueue.size == 0) {
+        if (postQueue.size == 0 && !isBusy()) {
             if (ancsServer != null && bluetoothDevice != null) {
                 notifyItem.notify(
                     ancsServer!!,
                     bluetoothDevice!!,
                     notificationCharacteristic,
                 )
-                Log.d("xunqun", "postAncsNotification: event:${eventId} cate:${categoryId} title:${title} sub:$subTitle msg:$message")
+                timestamp = System.currentTimeMillis()
+                Log.d(
+                    "xunqun",
+                    "postAncsNotification: event:${eventId} cate:${categoryId} title:${title} sub:${subTitle} msg:${message}"
+                )
             }
         } else {
             postQueue.add(notifyItem)
-            if(!busy){
-                busy = true
-                Thread {
-                    while(postQueue.size > 0) {
-                        Thread.sleep(10000)
-                        val n = postQueue.remove()
-                        if (ancsServer != null && bluetoothDevice != null) {
-                            try {
-                                n.notify(
-                                    ancsServer!!,
-                                    bluetoothDevice!!,
-                                    notificationCharacteristic,
-                                )
-                            }catch (e: Exception){
-                                e.printStackTrace()
-                            }
-                            Log.d("xunqun", "postAncsNotification: event:${n.eventId} cate:${n.categoryId} title:${n.title} sub:${n.subTitle} msg:${n.message}")
-                        }else{
-                            postQueue.clear()
+
+            Thread {
+                while (postQueue.size > 0) {
+                    Thread.sleep(10000)
+
+                    if (!isBusy() && ancsServer != null && bluetoothDevice != null) {
+
+                        try {
+                            val n = postQueue.remove()
+                            n.notify(
+                                ancsServer!!,
+                                bluetoothDevice!!,
+                                notificationCharacteristic,
+                            )
+                            timestamp = System.currentTimeMillis()
+                            Log.d(
+                                "xunqun",
+                                "postAncsNotification: event:${n.eventId} cate:${n.categoryId} title:${n.title} sub:${n.subTitle} msg:${n.message}"
+                            )
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
+
+                    } else {
+                        postQueue.clear()
                     }
-                    busy = false
-                }.start()
-            }
+                }
+
+            }.start()
+
         }
 
-        timestamp = time
+    }
+
+    private fun isBusy(): Boolean {
+        val time = System.currentTimeMillis()
+        return time - timestamp < 10000
     }
 
     override fun endPeripheral() {

@@ -76,13 +76,15 @@ class BlePeripheralService : NotificationListenerService() {
                     )
                 }
                 else -> {
-                    ancsPeripheral?.postAncsNotification(
-                        AncsPeripheral.ANCS_EVENT_ADDED,
-                        AncsPeripheral.ANCS_CATEGORY_SOCIAL_EVENT,
-                        title ?: "",
-                        text ?: "",
-                        text?:""
-                    )
+                    if(notification.category != null) {
+                        ancsPeripheral?.postAncsNotification(
+                            AncsPeripheral.ANCS_EVENT_ADDED,
+                            AncsPeripheral.ANCS_CATEGORY_SOCIAL_EVENT,
+                            title ?: "asdf",
+                            text ?: "asdf",
+                            text ?: "asdf"
+                        )
+                    }
                 }
             }
             Log.d("ancs", "onNotificationPosted: ${notification.category}, $title, $text")
@@ -164,7 +166,11 @@ class BlePeripheralService : NotificationListenerService() {
     }
 
     private fun unregisterBatteryLevel(){
-        unregisterReceiver(batteryObserver)
+        try {
+            unregisterReceiver(batteryObserver)
+        }catch (e: Exception){
+
+        }
     }
 
     private fun foregroundNotify() {

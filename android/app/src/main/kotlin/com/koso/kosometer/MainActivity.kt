@@ -41,11 +41,7 @@ class MainActivity: FlutterActivity() {
         alertDialogBuilder.setMessage("For the the app. to work you need to enable the Notification Listener Service. Enable it now?")
         alertDialogBuilder.setPositiveButton("YES",
             DialogInterface.OnClickListener { dialog, id -> startActivity(Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS)) })
-        alertDialogBuilder.setNegativeButton("NO",
-            DialogInterface.OnClickListener { dialog, id ->
-                // If you choose to not enable the notification listener
-                // the app. will not work as expected
-            })
+
         return alertDialogBuilder.create()
     }
 

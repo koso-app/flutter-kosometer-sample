@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '/utils/shared-preference.dart';
 
 import '../channel/flutter-talkie.dart';
@@ -50,6 +51,15 @@ class _PageConnectState extends State<PageConnect> {
                 builder: (context, snapshot) {
                   return getStateButton(snapshot.data ?? state);
                 })),
+        TextButton(
+            onPressed: () {
+              talkie.sendLeScan();
+              showScanDialog();
+            },
+            child: const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text("Scan", style: TextStyle(fontSize: 20)),
+            ),)
       ],
     );
   }
@@ -67,9 +77,14 @@ class _PageConnectState extends State<PageConnect> {
             width: double.infinity,
             child: ElevatedButton(
                 onPressed: () {
-                  // talkie.sendScan();
-                  talkie.sendLeScan();
-                  showScanDialog();
+
+                  var address = Preference.instance().getLastConnectAddress();
+                  if (address != null) {
+                    talkie.sendLeConnect(address);
+                  } else {
+                    talkie.sendLeScan();
+                    showScanDialog();
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(36)),
@@ -134,6 +149,9 @@ class _PageConnectState extends State<PageConnect> {
           );
         }).then((value) {
       talkie.sendStopScan();
+      // if(connectManager.state != ConnectState.Connected || connectManager.state != ConnectState.Connecting){
+      //   connectManager.state = ConnectState.Disconnected;
+      // }
     });
   }
 

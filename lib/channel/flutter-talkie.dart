@@ -95,6 +95,12 @@ class FlutterTalkie {
     platform.invokeMethod('connect', <String, dynamic>{
       'address': address,
     });
+    Future.delayed(Duration(seconds: 10)).then((value){
+      if(connectManager.state == ConnectState.Discovering) {
+        sendStopScan();
+        connectManager.state = ConnectState.Disconnected;
+      }
+    });
     LogManager.get().push(LogItem(title: "connect", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 1));
   }
 
