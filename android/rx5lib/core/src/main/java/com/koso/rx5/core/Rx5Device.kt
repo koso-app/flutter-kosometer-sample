@@ -18,6 +18,7 @@ import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -68,8 +69,15 @@ open class Rx5Device(
                     GlobalScope.launch(Dispatchers.Main) {
                         Rx5Handler.setState(State.Connected)
                     }
-                    bluetoothGatt?.requestMtu(256)
-                    bluetoothGatt?.discoverServices()
+
+                    GlobalScope.launch(Dispatchers.IO) {
+                        delay(2000)
+                        bluetoothGatt?.requestMtu(256)
+                        delay(2000)
+                        bluetoothGatt?.discoverServices()
+                        Log.d("xunqun", "discoverServices() ")
+                    }
+
 
                 }
                 BluetoothProfile.STATE_DISCONNECTED -> {
@@ -93,6 +101,7 @@ open class Rx5Device(
 
         override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
             super.onServicesDiscovered(gatt, status)
+            Log.d("xunqun", "onServicesDiscovered: $status")
             if(status == BluetoothGatt.GATT_SUCCESS){
                 gattService = gatt?.getService(UUID.fromString(ServiceUuidString))
                 gattReadCharacteristic = gattService?.getCharacteristic(UUID.fromString(ReadCharacteristicUuidString))
