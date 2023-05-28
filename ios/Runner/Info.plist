@@ -24,6 +24,22 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+    <key>NSBonjourServices</key>
+    <array>
+        <string>_dartobservatory._tcp</string>
+    </array>
+    <key>NSBluetoothAlwaysUsageDescription</key>
+    <string>kosometer communicates with hardware accessories using Bluetooth</string>
+    <key>NSBluetoothPeripheralUsageDescription</key>
+    <string>kosometer communicates with hardware accessories using Bluetooth</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>kosometer uses location to display a map for providing directions</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>kosometer uses location to display a map for providing directions</string>
+    <key>NSLocationUsageDescription</key>
+    <string>kosometer uses location to display a map for providing directions</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>kosometer uses location to display a map for providing directions</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
