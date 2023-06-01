@@ -90,7 +90,7 @@ class _PageConnectState extends State<PageConnect> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(36)),
                     backgroundColor: Colors.redAccent),
                 child: Text(
-                  AppLocalizations.of(context).connect.toUpperCase(),
+                  AppLocalizations.of(context)!.connect.toUpperCase(),
                   style: const TextStyle(color: Colors.white),
                 )));
       case ConnectState.Connecting:
@@ -103,7 +103,7 @@ class _PageConnectState extends State<PageConnect> {
                 const SizedBox(
                   width: 16,
                 ),
-                Text("${AppLocalizations.of(context).connecting}...",
+                Text("${AppLocalizations.of(context)!.connecting}...",
                     style: TextStyle(color: Theme.of(context).primaryColor)),
               ],
             ));
@@ -117,7 +117,7 @@ class _PageConnectState extends State<PageConnect> {
                 const SizedBox(
                   width: 16,
                 ),
-                Text("${AppLocalizations.of(context).scanning}...",
+                Text("${AppLocalizations.of(context)!.scanning}...",
                     style: TextStyle(color: Theme.of(context).primaryColor)),
               ],
             ));
@@ -133,7 +133,7 @@ class _PageConnectState extends State<PageConnect> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(36)),
                 ),
                 child: Text(
-                  AppLocalizations.of(context).disconnect.toUpperCase(),
+                  AppLocalizations.of(context)!.disconnect.toUpperCase(),
                   style: const TextStyle(color: Colors.white),
                 )));
     }
@@ -159,16 +159,16 @@ class _PageConnectState extends State<PageConnect> {
     state = event;
     switch (event) {
       case ConnectState.Connected:
-        desc = AppLocalizations.of(context).connected;
+        desc = AppLocalizations.of(context)!.connected;
         break;
       case ConnectState.Discovering:
-        desc = AppLocalizations.of(context).scanning;
+        desc = AppLocalizations.of(context)!.scanning;
         break;
       case ConnectState.Connecting:
-        desc = AppLocalizations.of(context).connecting;
+        desc = AppLocalizations.of(context)!.connecting;
         break;
       default:
-        desc = AppLocalizations.of(context).disconnected;
+        desc = AppLocalizations.of(context)!.disconnected;
     }
   }
 }

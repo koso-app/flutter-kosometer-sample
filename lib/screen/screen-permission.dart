@@ -30,7 +30,7 @@ class PermissionScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(32.0),
               child: Text(
-                AppLocalizations.of(context).needPermissions,
+                AppLocalizations.of(context)!.needPermissions,
                 style: const TextStyle(color: Colors.white),
               ),
             ),
@@ -49,7 +49,7 @@ class PermissionScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Icon(Icons.check),
-                      Text(AppLocalizations.of(context).grantPermission),
+                      Text(AppLocalizations.of(context)!.grantPermission),
                     ],
                   ),
                   style: ElevatedButton.styleFrom(shape: const StadiumBorder(), primary: Theme.of(context).primaryColor),
@@ -90,15 +90,15 @@ class PermissionScreen extends StatelessWidget {
           context: context,
           builder: (c) {
             return AlertDialog(
-              title: Text(AppLocalizations.of(context).permissionsDenied),
-              content: Text(AppLocalizations.of(context).grantInSettings),
+              title: Text(AppLocalizations.of(context)!.permissionsDenied),
+              content: Text(AppLocalizations.of(context)!.grantInSettings),
               actions: [
                 ElevatedButton(
                     onPressed: () async {
                       await openAppSettings();
                       Navigator.pop(context);
                     },
-                    child: Text(AppLocalizations.of(context).ok))
+                    child: Text(AppLocalizations.of(context)!.ok))
               ],
             );
           });
