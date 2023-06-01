@@ -43,15 +43,24 @@ class FlutterHelper: NSObject {
                 if call.method == "scan" {
                     self.handleScan()
                     result(nil)
+                } else if call.method == "lescan" {
+					self.handleScan()
+					result(nil)
                 } else if call.method == "stopscan" {
                     self.handleStopScan()
                     result(nil)
                 } else if call.method == "connect" {
-                    if let arg = call.arguments as? [String: Any],
-                       let address = arg["address"] as? String {
-                        self.handleConnect(address: address)
-                    }
-                    result(nil)
+					if let arg = call.arguments as? [String: Any],
+					   let address = arg["address"] as? String {
+						self.handleConnect(address: address)
+					}
+					result(nil)
+                } else if call.method == "leconnect" {
+					if let arg = call.arguments as? [String: Any],
+					   let address = arg["address"] as? String {
+						self.handleConnect(address: address)
+					}
+					result(nil)
                 } else if call.method == "disconnect" {
                     self.handleDisconnect()
                     result(nil)
@@ -71,6 +80,8 @@ class FlutterHelper: NSObject {
                 } else if call.method == "dismiss_navinotify" {
                     self.handleDismissNaviNotify()
                     result(nil)
+                } else if call.method == "start_ancs" {
+					result(nil)
                 } else if call.method == "whatstate" {
                     self.handleWhatState(result: result)
                 } else {
