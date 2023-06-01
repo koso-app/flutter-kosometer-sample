@@ -22,7 +22,6 @@ Future<bool> isPermanentDenied() async{
   if (Platform.isIOS) {
     var states = await [
       Permission.bluetooth,
-      Permission.locationWhenInUse,
     ].request();
     for(PermissionStatus v in states.values){
       if(v == PermissionStatus.permanentlyDenied){
