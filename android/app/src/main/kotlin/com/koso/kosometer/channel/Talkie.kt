@@ -42,6 +42,7 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
     private var gson = Gson()
     private var device: BluetoothDevice? = null
     var bluetoothAdapter: BluetoothAdapter? = null
+    private var isLe: Boolean = false
 
     //used for Le Scan
     private val mLeScanCallback = object : ScanCallback() {
@@ -101,6 +102,7 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
                 result.success(null)
             }
             "connect" -> {
+                isLe = false
                 if(checkBluetoothAvailable()) {
                     val address = call.argument<String>("address")
                     if(address != null) {
@@ -116,14 +118,13 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
                 }
             }
             "leconnect" -> {
+                isLe = true
                 if(checkBluetoothAvailable()) {
                     val address = call.argument<String>("address")
                     if(address != null) {
                         if(bluetoothAdapter?.isDiscovering == true){
-                            if(bluetoothAdapter?.isDiscovering == true) {
-                                bluetoothAdapter?.bluetoothLeScanner?.stopScan(mLeScanCallback)
-                                sendState(Rx5Device.State.Disconnected)
-                            }
+                            bluetoothAdapter?.bluetoothLeScanner?.stopScan(mLeScanCallback)
+                            sendState(Rx5Device.State.Disconnected)
                         }
                         handleLeConnect(address)
                         result.success(null)
@@ -353,8 +354,12 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
     private fun receiveNaviinfo(naviCmd: String) {
         android.util.Log.d("xunqun", "write Naviinfo: ")
         val cmd = gson.fromJson(naviCmd, NaviInfoCommand::class.java)
-//        Rx5Handler.rx5?.write(cmd)
-        Rx5Handler.rx5?.writeLe(cmd)
+        if(isLe){
+            Rx5Handler.rx5?.writeLe(cmd)
+        }else{
+            Rx5Handler.rx5?.write(cmd)
+        }
+
     }
 
     companion object {
