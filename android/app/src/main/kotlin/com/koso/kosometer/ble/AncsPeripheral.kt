@@ -38,7 +38,6 @@ class AncsPeripheral(val context: Context) : BasePeripheral {
     private val ancsCallback = object : BluetoothGattServerCallback() {
         override fun onConnectionStateChange(device: BluetoothDevice?, status: Int, newState: Int) {
             super.onConnectionStateChange(device, status, newState)
-            Log.d("xunqun", "onConnectionStateChange: ${device?.name}: $status -> $newState ")
             when (newState) {
                 BluetoothProfile.STATE_CONNECTED -> {
 //                    ancsServer?.connect(device, false)
@@ -75,13 +74,11 @@ class AncsPeripheral(val context: Context) : BasePeripheral {
 
         override fun onServiceAdded(status: Int, service: BluetoothGattService?) {
             super.onServiceAdded(status, service)
-            Log.d("xunqun", "onServiceAdded: ")
         }
 
 
         override fun onMtuChanged(device: BluetoothDevice?, mtu: Int) {
             super.onMtuChanged(device, mtu)
-            Log.d("xunqun", "onMtuChanged: $mtu")
         }
 
 
@@ -94,10 +91,7 @@ class AncsPeripheral(val context: Context) : BasePeripheral {
             offset: Int,
             value: ByteArray?
         ) {
-            Log.d(
-                "xunqun",
-                "rx5 -> app: " + StringTools.Bytes2HexString(value!!, 0, value!!.size) ?: ""
-            )
+
             super.onCharacteristicWriteRequest(
                 device,
                 requestId,
@@ -161,7 +155,6 @@ class AncsPeripheral(val context: Context) : BasePeripheral {
             offset: Int,
             characteristic: BluetoothGattCharacteristic?
         ) {
-            Log.d("xunqun", "onCharacteristicReadRequest: ${characteristic?.uuid.toString()}")
             super.onCharacteristicReadRequest(device, requestId, offset, characteristic)
             if (ancsServer == null) {
                 return
@@ -182,7 +175,6 @@ class AncsPeripheral(val context: Context) : BasePeripheral {
             offset: Int,
             descriptor: BluetoothGattDescriptor?
         ) {
-            Log.d("xunqun", "onDescriptorReadRequest: ")
             super.onDescriptorReadRequest(device, requestId, offset, descriptor)
             if (ancsServer == null) {
                 return
@@ -222,10 +214,7 @@ class AncsPeripheral(val context: Context) : BasePeripheral {
                 offset,
                 value
             )
-            Log.d(
-                "xunqun",
-                "onDescriptorWriteRequest: ${StringTools.Bytes2HexString(value!!, 0, value!!.size)}"
-            )
+
         }
 
 
@@ -235,13 +224,11 @@ class AncsPeripheral(val context: Context) : BasePeripheral {
     private val advertisingCallback = object : AdvertiseCallback() {
         override fun onStartFailure(errorCode: Int) {
             super.onStartFailure(errorCode)
-            Log.d("xunqun", "Advertising failed")
             BlePeripheralService.end(context)
         }
 
         override fun onStartSuccess(settingsInEffect: AdvertiseSettings?) {
             super.onStartSuccess(settingsInEffect)
-            Log.d("xunqun", "Advertising started successfully ")
         }
 
     }
@@ -300,10 +287,6 @@ class AncsPeripheral(val context: Context) : BasePeripheral {
                     notificationCharacteristic,
                 )
                 timestamp = System.currentTimeMillis()
-                Log.d(
-                    "xunqun",
-                    "postAncsNotification: event:${eventId} cate:${categoryId} title:${title} sub:${subTitle} msg:${message}"
-                )
             }
         } else {
             postQueue.add(notifyItem)
@@ -322,10 +305,6 @@ class AncsPeripheral(val context: Context) : BasePeripheral {
                                 notificationCharacteristic,
                             )
                             timestamp = System.currentTimeMillis()
-                            Log.d(
-                                "xunqun",
-                                "postAncsNotification: event:${n.eventId} cate:${n.categoryId} title:${n.title} sub:${n.subTitle} msg:${n.message}"
-                            )
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }

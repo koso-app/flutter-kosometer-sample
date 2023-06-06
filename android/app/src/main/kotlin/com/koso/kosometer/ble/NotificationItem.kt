@@ -37,7 +37,6 @@ class NotificationItem(val eventId: Int, val categoryId: Int, val title: String,
         notifychar.addDescriptor(desp)
         gattServer.notifyCharacteristicChanged(device, notifychar, false)
 
-        Log.d("xunqun", "app -> rx5: ${StringTools.Bytes2HexString(payload, 0, payload.size)}")
     }
 
     fun moreInfo(gattServer: BluetoothGattServer, device: BluetoothDevice, datachar: BluetoothGattCharacteristic, attributes: Map<Int, Int>){
@@ -108,7 +107,6 @@ class NotificationItem(val eventId: Int, val categoryId: Int, val title: String,
 
         datachar.value = payload
         gattServer.notifyCharacteristicChanged(device, datachar, false)
-        Log.d("xunqun", "app -> rx5: ${StringTools.Bytes2HexString(payload, 0, payload.size)}")
     }
 
 

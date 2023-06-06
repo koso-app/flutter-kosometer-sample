@@ -352,7 +352,6 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
 
     // handle naviinfo request
     private fun receiveNaviinfo(naviCmd: String) {
-        android.util.Log.d("xunqun", "write Naviinfo: ")
         val cmd = gson.fromJson(naviCmd, NaviInfoCommand::class.java)
         if(isLe){
             Rx5Handler.rx5?.writeLe(cmd)
