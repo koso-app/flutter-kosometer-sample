@@ -90,18 +90,17 @@ class BlePeripheralService : NotificationListenerService() {
             Log.d("ancs", "onNotificationPosted: ${notification.category}, $title, $text")
 
         } else {
-            Log.d("xunqun", "onNotificationPosted: but not show")
+
         }
     }
 
     override fun onListenerConnected() {
         super.onListenerConnected()
-        Log.d("xunqun", "onListenerConnected: ")
+
     }
 
     override fun onListenerDisconnected() {
         super.onListenerDisconnected()
-        Log.d("xunqun", "onListenerConnected: ")
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
@@ -209,7 +208,6 @@ class BlePeripheralService : NotificationListenerService() {
 
         // Notification ID cannot be 0.
         startForeground(3210, notification)
-        Log.d("xunqun", "start foregroundNotify ")
 
     }
 }

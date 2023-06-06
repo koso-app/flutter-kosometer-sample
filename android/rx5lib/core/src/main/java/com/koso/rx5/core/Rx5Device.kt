@@ -62,7 +62,6 @@ open class Rx5Device(
 
     private val bluetoothGattCallback = object : BluetoothGattCallback() {
         override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
-            Log.d("xunqun", "onConnectionStateChange: $newState")
             bluetoothGatt = gatt
             when(newState){
                 BluetoothProfile.STATE_CONNECTED -> {
@@ -75,7 +74,6 @@ open class Rx5Device(
                         bluetoothGatt?.requestMtu(256)
                         delay(4000)
                         bluetoothGatt?.discoverServices()
-                        Log.d("xunqun", "discoverServices() ")
                     }
 
 
@@ -101,7 +99,6 @@ open class Rx5Device(
 
         override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
             super.onServicesDiscovered(gatt, status)
-            Log.d("xunqun", "onServicesDiscovered: $status")
             if(status == BluetoothGatt.GATT_SUCCESS){
                 gattService = gatt?.getService(UUID.fromString(ServiceUuidString))
                 gattReadCharacteristic = gattService?.getCharacteristic(UUID.fromString(ReadCharacteristicUuidString))
@@ -330,14 +327,12 @@ open class Rx5Device(
                 bluetoothGatt = device.connectGatt(context, false, bluetoothGattCallback)
 
             } catch (exception: IllegalArgumentException) {
-                Log.w("xunqun", "Device not found with provided address.")
                 destory()
                 Rx5Handler.setState(State.Disconnected)
                 return false
             }
             // connect to the GATT server on the device
         } ?: run {
-            Log.w("xunqun", "BluetoothAdapter not initialized")
             Rx5Handler.setState(State.Disconnected)
             return false
         }
@@ -439,11 +434,6 @@ open class Rx5Device(
     }
 
     fun write(cmd: BaseOutgoingCommand): Boolean {
-//        Log.d("rx5", Utility.bytesToHex(cmd.encode()))
-//        Log.d("rx5", "------")
-//        Log.d("rx5", cmd.valueToString())
-//        Log.d("rx5", "------")
-
         return write(cmd.encode())
     }
 

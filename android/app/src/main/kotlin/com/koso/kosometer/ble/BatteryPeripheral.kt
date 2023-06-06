@@ -40,11 +40,9 @@ class BatteryPeripheral(val context: Context) : BasePeripheral {
 //                    }
 //
 //                }, 2000, 30000)
-                Log.d("xunqun", "gatt connected succuss")
             } else {
                 bluetoothDevice = null
                 updateConnectedDevicesStatus()
-                Log.d("xunqun", "gatt connect failed")
             }
         }
 
@@ -128,7 +126,6 @@ class BatteryPeripheral(val context: Context) : BasePeripheral {
         val time = System.currentTimeMillis()
         if(time - timestamp < 30000) return
         if(gattServer != null && bluetoothDevice != null) {
-            Log.d("xunqun", "sendBatteryLevel: $level")
             val descriptor = batteryLevelCharacteristic.getDescriptor(BATTERY_DESCRIPTOR)
             descriptor.value = byteArrayOf((level and 0xFF).toByte())
             batteryLevelCharacteristic.addDescriptor(descriptor)
