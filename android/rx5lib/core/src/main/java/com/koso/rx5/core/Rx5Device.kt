@@ -73,7 +73,7 @@ open class Rx5Device(
                     GlobalScope.launch(Dispatchers.IO) {
                         delay(2000)
                         bluetoothGatt?.requestMtu(256)
-                        delay(2000)
+                        delay(4000)
                         bluetoothGatt?.discoverServices()
                         Log.d("xunqun", "discoverServices() ")
                     }
