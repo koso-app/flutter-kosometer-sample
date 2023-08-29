@@ -144,6 +144,13 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
                 }
                 result.success(null)
             }
+            "naviinfo-kawasaki" -> {
+                val json = call.argument<String>("naviinfo-kawasaki")
+                if (json != null) {
+                    receiveNaviinfo(json)
+                }
+                result.success(null)
+            }
             "whatstate" -> {
                 result.success(state.name)
             }
@@ -358,6 +365,9 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
         }else{
             Rx5Handler.rx5?.write(cmd)
         }
+    }
+
+    private fun receiveNaviinfoKawasaki(naviCmd: String){
 
     }
 

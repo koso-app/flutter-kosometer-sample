@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:kosometer/manager/log-manager.dart';
+import 'package:kosometer/rx5/kawasaki/naviinfo.dart';
 import '/manager/connect-manager.dart';
 import '/rx5/base-incoming.dart';
 import '/rx5/incoming-info1.dart';
@@ -128,7 +129,14 @@ class FlutterTalkie {
     return platform.invokeMethod('naviinfo', <String, dynamic>{
       'naviinfo': j,
     });
+  }
 
+  Future sendNaviInfoKawasaki(NaviInfoKawasaki cmd){
+    LogManager.get().push(LogItem(title: "naviinfo-kawasaki", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 1));
+    var j = json.encode(cmd);
+    return platform.invokeMethod('naviinfo-kawasaki', <String, dynamic>{
+      'naviinfo-kawasaki': j,
+    });
   }
 
   Future startAncs() async{
