@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kosometer/channel/flutter-talkie.dart';
 import 'package:kosometer/rx5/kawasaki/naviinfo.dart';
 import 'package:kosometer/rx5/naviinfo.dart';
 
-class PageNavigation extends StatefulWidget {
-  const PageNavigation({Key? key}) : super(key: key);
+import '../../manager/connect-manager.dart';
+
+class PageNavigationKawasaki extends StatefulWidget {
+  const PageNavigationKawasaki({Key? key}) : super(key: key);
 
   @override
-  State<PageNavigation> createState() => _PageNavigationState();
+  State<PageNavigationKawasaki> createState() => _PageNavigationKawasakiState();
 }
 
-class _PageNavigationState extends State<PageNavigation> {
-
+class _PageNavigationKawasakiState extends State<PageNavigationKawasaki> {
   int turn_distance = 40;
   int distance_unit = 0;
   int next_type = 2;
@@ -25,23 +27,29 @@ class _PageNavigationState extends State<PageNavigation> {
             child: Column(
               children: [
                 PropertyEditor(
-                    desc: "Turn distance",
-                    defaultText: turn_distance.toString(),
-                    callback: (String input) {
-                      turn_distance = int.parse(input);
-                    }),
+                  desc: "Turn distance",
+                  defaultText: turn_distance.toString(),
+                  callback: (String input) {
+                    turn_distance = int.parse(input);
+                  },
+                  keyboardType: TextInputType.number,
+                ),
                 PropertyEditor(
-                    desc: "Distance unit",
-                    defaultText: distance_unit.toString(),
-                    callback: (String input) {
-                      turn_distance = int.parse(input);
-                    }),
+                  desc: "Distance unit",
+                  defaultText: distance_unit.toString(),
+                  callback: (String input) {
+                    turn_distance = int.parse(input);
+                  },
+                  keyboardType: TextInputType.number,
+                ),
                 PropertyEditor(
-                    desc: "Turn type",
-                    defaultText: next_type.toString(),
-                    callback: (String input) {
-                      next_type = int.parse(input);
-                    }),
+                  desc: "Turn type",
+                  defaultText: next_type.toString(),
+                  callback: (String input) {
+                    next_type = int.parse(input);
+                  },
+                  keyboardType: TextInputType.number,
+                ),
               ],
             ),
           ),
@@ -51,7 +59,15 @@ class _PageNavigationState extends State<PageNavigation> {
             height: 48,
             child: ElevatedButton(
                 onPressed: () {
-                  var cmd = NaviInfoKawasaki( turn_distance, distance_unit, next_type,);
+                  if(connectManager.state != ConnectState.Connected){
+                    Fluttertoast.showToast(msg: 'No connection available', backgroundColor: Colors.red);
+                    return;
+                  }
+                  var cmd = NaviInfoKawasaki(
+                    turn_distance,
+                    distance_unit,
+                    next_type,
+                  );
                   talkie.sendNaviInfoKawasaki(cmd);
                 },
                 child: Text("Send")))
@@ -64,8 +80,14 @@ class PropertyEditor extends StatefulWidget {
   final String desc;
   final String defaultText;
   final Function(String input) callback;
+  final TextInputType keyboardType;
 
-  const PropertyEditor({Key? key, required this.desc, required this.defaultText, required this.callback})
+  const PropertyEditor(
+      {Key? key,
+      required this.desc,
+      required this.defaultText,
+      required this.callback,
+      this.keyboardType = TextInputType.text})
       : super(key: key);
 
   @override
@@ -102,6 +124,7 @@ class _PropertyFieldState extends State<PropertyEditor> {
                 width: 160,
                 child: TextField(
                   controller: textEditingController,
+                  keyboardType: widget.keyboardType,
                 ),
               ),
               Text("// ${widget.desc}")
