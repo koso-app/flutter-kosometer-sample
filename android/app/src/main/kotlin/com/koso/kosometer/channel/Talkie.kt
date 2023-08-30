@@ -371,7 +371,8 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
 
     private fun receiveNaviinfoKawasaki(naviCmd: String){
         val cmd = gson.fromJson(naviCmd, NaviInfoKawasakiCommand::class.java)
-            Rx5Handler.rx5?.writeLe(cmd.encode());
+        Rx5Handler.rx5?.writeLe(cmd.encode())
+
     }
 
     companion object {

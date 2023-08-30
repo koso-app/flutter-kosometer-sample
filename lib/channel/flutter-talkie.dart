@@ -3,12 +3,13 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:kosometer/manager/log-manager.dart';
-import 'package:kosometer/rx5/kawasaki/naviinfo.dart';
+import '../transaction/base-incoming.dart';
+import '../transaction/kawasaki/naviinfo.dart';
+import '../transaction/rx5/incoming-info1.dart';
+import '../transaction/rx5/incoming-info2.dart';
+import '../transaction/rx5/naviinfo.dart';
 import '/manager/connect-manager.dart';
-import '/rx5/base-incoming.dart';
-import '/rx5/incoming-info1.dart';
-import '/rx5/incoming-info2.dart';
-import '/rx5/naviinfo.dart';
+
 import '/utils/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

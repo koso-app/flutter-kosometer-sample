@@ -1,4 +1,6 @@
-import '/rx5/base-incoming.dart';
+
+
+import '../base-incoming.dart';
 
 class IncomingInfo1 extends BaseIncoming {
   final int speed;

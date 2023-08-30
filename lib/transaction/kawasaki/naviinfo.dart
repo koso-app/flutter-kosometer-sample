@@ -1,6 +1,5 @@
 import '../base-outgoing.dart';
-import '/rx5/base-incoming.dart';
-import '/rx5/base-outgoing.dart';
+
 
 class NaviInfoKawasaki extends BaseOutgoing {
   int mode;

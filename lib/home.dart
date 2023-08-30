@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kosometer/screen/kawasaki/page-navigation.dart';
 import 'package:kosometer/screen/page-log.dart';
 
 import 'screen/page-connect.dart';

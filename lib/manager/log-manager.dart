@@ -28,8 +28,9 @@ class LogManager {
 class LogItem {
   String title;
   String content;
+  String hex;
   int timestamp;
   int direction; // send: 1, received: 2, no define: 0
 
-  LogItem({required this.title, this.content = "", required this.timestamp, this.direction = 0});
+  LogItem({required this.title, this.content = '', this.hex = '', required this.timestamp, this.direction = 0});
 }
