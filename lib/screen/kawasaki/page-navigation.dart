@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kosometer/channel/flutter-talkie.dart';
+import 'package:kosometer/rx5/kawasaki/kawasaki-helper.dart';
 import 'package:kosometer/rx5/kawasaki/naviinfo.dart';
-import 'package:kosometer/rx5/naviinfo.dart';
 
-import '../../manager/connect-manager.dart';
 
 class PageNavigationKawasaki extends StatefulWidget {
   const PageNavigationKawasaki({Key? key}) : super(key: key);
@@ -14,6 +12,7 @@ class PageNavigationKawasaki extends StatefulWidget {
 }
 
 class _PageNavigationKawasakiState extends State<PageNavigationKawasaki> {
+  int mode = 0;
   int turn_distance = 40;
   int distance_unit = 0;
   int next_type = 2;
@@ -27,6 +26,14 @@ class _PageNavigationKawasakiState extends State<PageNavigationKawasaki> {
             child: Column(
               children: [
                 PropertyEditor(
+                  desc: "Mode",
+                  defaultText: mode.toString(),
+                  callback: (String input) {
+                    mode = int.parse(input);
+                  },
+                  keyboardType: TextInputType.number,
+                ),
+                PropertyEditor(
                   desc: "Turn distance",
                   defaultText: turn_distance.toString(),
                   callback: (String input) {
@@ -38,7 +45,7 @@ class _PageNavigationKawasakiState extends State<PageNavigationKawasaki> {
                   desc: "Distance unit",
                   defaultText: distance_unit.toString(),
                   callback: (String input) {
-                    turn_distance = int.parse(input);
+                    distance_unit = int.parse(input);
                   },
                   keyboardType: TextInputType.number,
                 ),
@@ -59,11 +66,14 @@ class _PageNavigationKawasakiState extends State<PageNavigationKawasaki> {
             height: 48,
             child: ElevatedButton(
                 onPressed: () {
-                  if(connectManager.state != ConnectState.Connected){
-                    Fluttertoast.showToast(msg: 'No connection available', backgroundColor: Colors.red);
-                    return;
-                  }
+                  // if(connectManager.state != ConnectState.Connected){
+                  //   Fluttertoast.showToast(msg: 'No connection available', backgroundColor: Colors.red);
+                  //   return;
+                  // }
+
                   var cmd = NaviInfoKawasaki(
+                    mode,
+                    getSequenceNumber(),
                     turn_distance,
                     distance_unit,
                     next_type,

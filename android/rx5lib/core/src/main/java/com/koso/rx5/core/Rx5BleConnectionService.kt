@@ -81,12 +81,8 @@ class Rx5BleConnectionService : LifecycleService() {
 
     val binder = ConnectServiceBinder()
 
-    /**
-     * Class used for the client Binder.  Because we know this service always
-     * runs in the same process as its clients, we don't need to deal with IPC.
-     */
+
     inner class ConnectServiceBinder : Binder() {
-        // Return this instance of LocalService so clients can call public methods
         val serviceRx5: Rx5BleConnectionService = this@Rx5BleConnectionService
     }
 

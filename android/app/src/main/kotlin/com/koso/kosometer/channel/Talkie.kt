@@ -284,7 +284,7 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
 
     @SuppressLint("MissingPermission")
     private fun possibleDevice(device: BluetoothDevice): Boolean {
-        return device.name != null && device.name.contains("KOSO", ignoreCase = true)
+        return device.name != null && device.name.contains("kawasaki", ignoreCase = true)
     }
 
     @SuppressLint("MissingPermission")

@@ -143,7 +143,7 @@ class _PageConnectState extends State<PageConnect> {
         context: context,
         builder: (c) {
           return const AlertDialog(
-            title: Text('Scanning list'),
+            title: Text('Possible devices (advertise name contains "Kawasaki")'),
             content: ScanResultsList(),
           );
         }).then((value) {

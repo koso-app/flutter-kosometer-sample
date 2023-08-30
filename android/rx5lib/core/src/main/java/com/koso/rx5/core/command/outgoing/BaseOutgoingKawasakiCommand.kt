@@ -6,11 +6,11 @@ import java.io.IOException
 import java.util.*
 import kotlin.experimental.xor
 
-
 abstract class BaseOutgoingKawasakiCommand {
 
     abstract fun payload(): ByteArray
     abstract fun header(): ByteArray
+
 
 
     open fun encode(): ByteArray {
