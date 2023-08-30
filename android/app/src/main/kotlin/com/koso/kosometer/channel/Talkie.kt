@@ -30,6 +30,7 @@ import com.koso.rx5.core.command.incoming.BaseIncomingCommand
 import com.koso.rx5.core.command.incoming.RuntimeInfo1Command
 import com.koso.rx5.core.command.incoming.RuntimeInfo2Command
 import com.koso.rx5.core.command.outgoing.NaviInfoCommand
+import com.koso.rx5.core.command.outgoing.NaviInfoKawasakiCommand
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.loader.FlutterLoader
 import io.flutter.plugin.common.MethodChannel
@@ -145,9 +146,10 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
                 result.success(null)
             }
             "naviinfo-kawasaki" -> {
+                // the function is designed for kawasaki-data handling
                 val json = call.argument<String>("naviinfo-kawasaki")
                 if (json != null) {
-                    receiveNaviinfo(json)
+                    receiveNaviinfoKawasaki(json)
                 }
                 result.success(null)
             }
@@ -368,7 +370,8 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
     }
 
     private fun receiveNaviinfoKawasaki(naviCmd: String){
-
+        val cmd = gson.fromJson(naviCmd, NaviInfoKawasakiCommand::class.java)
+            Rx5Handler.rx5?.writeLe(cmd.encode());
     }
 
     companion object {

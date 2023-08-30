@@ -4,10 +4,11 @@ import com.koso.rx5.core.util.Utility
 
 
 class NaviInfoKawasakiCommand(
+    val mode: Int, //0:Under Navigation, 1:Under Routing, 2:Completed, 3:No Navigation
     val seq: Int, //Sequence number from 0 to 255
     val turndistance: Int,
-    val distanceunit: Int,//int          nextdist;  //下條轉彎道路距離 單位 : 公尺   an.nextdist = 200;
-    val turntype: Int,          //int          nextturn; //下條轉彎方向i=nextturn%100,道路型態bbb=(int)(nextturn/100) an.nextdist = 0;(直行),an.nextdist = 100;(橋梁)
+    val distanceunit: Int, //0:km, 1:m, 2:mile, 3:ft, 4:yd, 5-15:RESERVE
+    val turntype: Int,          //int
 ) : BaseOutgoingKawasakiCommand() {
     val bid = 0x14
 
@@ -20,29 +21,31 @@ class NaviInfoKawasakiCommand(
         )
     }
 
+    /**
+     * Byte data in the payload is using Big-endian order
+     */
     override fun payload(): ByteArray {
         return concatenateByteArrays(
             bid.toByteArray(1),
             seq.toByteArray(1),
-            byteArrayOf(0x05, 0x70).reversedArray(),
+            byteArrayOf(0x05, 0x70),
             get570(),
-            byteArrayOf(0x05, 0x71).reversedArray(),
+            byteArrayOf(0x05, 0x71),
             get571(),
-            byteArrayOf(0x05, 0x72).reversedArray(),
+            byteArrayOf(0x05, 0x72),
             get572()
         )
     }
 
     private fun get570(): ByteArray {
         return concatenateByteArrays(
-            byteArrayOf(0x00), // under navigation
+            byteArrayOf(mode.toByte()),
             ByteArray(7)
         )
     }
 
     private fun get571(): ByteArray {
         return concatenateByteArrays(
-            byteArrayOf(0x05, 0x71).reversedArray(),
             turntype.toByteArray(1),
             distanceunit.toByteArray(1),
             turndistance.toByteArray(3),

@@ -425,12 +425,16 @@ open class Rx5Device(
         compositeDisposable.add(dispo)
     }
 
-    fun writeLe(cmd: BaseOutgoingCommand): Boolean{
-        val success =  gattWriteCharacteristic?.setValue(cmd.encode()) ?: false
+    fun writeLe(bytes: ByteArray): Boolean{
+        val success =  gattWriteCharacteristic?.setValue(bytes) ?: false
         if(success) {
             return bluetoothGatt?.writeCharacteristic(gattWriteCharacteristic) ?: false
         }
         return false
+    }
+
+    fun writeLe(cmd: BaseOutgoingCommand): Boolean{
+        return writeLe(cmd.encode())
     }
 
     fun write(cmd: BaseOutgoingCommand): Boolean {

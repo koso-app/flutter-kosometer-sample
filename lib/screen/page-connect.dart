@@ -52,7 +52,7 @@ class _PageConnectState extends State<PageConnect> {
                 })),
         TextButton(
             onPressed: () {
-              talkie.sendScan();
+              talkie.sendLeScan();
               showScanDialog();
             },
             child: const Padding(
@@ -79,9 +79,9 @@ class _PageConnectState extends State<PageConnect> {
 
                   var address = Preference.instance().getLastConnectAddress();
                   if (address != null) {
-                    talkie.sendConnect(address);
+                    talkie.sendLeConnect(address);
                   } else {
-                    talkie.sendScan();
+                    talkie.sendLeScan();
                     showScanDialog();
                   }
                 },
@@ -214,8 +214,7 @@ class _ScanResultsListState extends State<ScanResultsList> {
                     onTap: () {
                       Navigator.pop(context);
                       talkie.sendStopScan();
-                      // talkie.sendConnect(address);
-                      talkie.sendConnect(address);
+                      talkie.sendLeConnect(address);
                       Preference.instance().putLastConnectAddress(address);
                     },
                   );
