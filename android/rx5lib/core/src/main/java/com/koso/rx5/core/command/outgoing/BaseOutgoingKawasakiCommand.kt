@@ -1,5 +1,6 @@
 package com.koso.rx5.core.command.outgoing
 
+import android.util.Log
 import com.koso.rx5.core.util.Utility
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -18,6 +19,7 @@ abstract class BaseOutgoingKawasakiCommand {
             header(),
             payload()
         )
+        Log.d("xunqun", "payload: ${Utility.bytesToHex(result)}")
         return result
     }
 

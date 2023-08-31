@@ -143,7 +143,7 @@ class PageNavigationKawasaki extends StatefulWidget {
 }
 
 class _PageNavigationKawasakiState extends State<PageNavigationKawasaki> {
-  int mode = 0;
+  int mode = 1;
   int turn_distance = 40;
   int distance_unit = 0;
   int next_type = 2;

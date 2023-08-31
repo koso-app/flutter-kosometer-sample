@@ -76,7 +76,7 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
 
     private val handler = MethodChannel.MethodCallHandler { call, result ->
         when (call.method) {
-            "scan" -> {
+            "scan" -> { // classic scan
                 if(checkBluetoothAvailable()) {
                     startScan(bluetoothAdapter!!)
                     result.success(null)
@@ -84,7 +84,7 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
                     sendError(ConnectError.bt_fail)
                 }
             }
-            "lescan" -> {
+            "lescan" -> { // BLE scan
                 if(checkBluetoothAvailable()) {
                     startLeScan(bluetoothAdapter!!)
                     result.success(null)
@@ -102,7 +102,7 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
                 }
                 result.success(null)
             }
-            "connect" -> {
+            "connect" -> { // classic connect
                 isLe = false
                 if(checkBluetoothAvailable()) {
                     val address = call.argument<String>("address")
@@ -118,7 +118,7 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
                     sendError(ConnectError.bt_fail)
                 }
             }
-            "leconnect" -> {
+            "leconnect" -> { // BLE connect
                 isLe = true
                 if(checkBluetoothAvailable()) {
                     val address = call.argument<String>("address")
@@ -138,14 +138,14 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
                 receiveEnd()
                 result.success(null)
             }
-            "naviinfo" -> {
+            "naviinfo" -> { // KOSO navi info
                 val json = call.argument<String>("naviinfo")
                 if (json != null) {
                     receiveNaviinfo(json)
                 }
                 result.success(null)
             }
-            "naviinfo-kawasaki" -> {
+            "naviinfo-kawasaki" -> { //Kawasaki navi info
                 // the function is designed for kawasaki-data handling
                 val json = call.argument<String>("naviinfo-kawasaki")
                 if (json != null) {
@@ -163,7 +163,7 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
             "dismiss_navinotify" -> {
                 Rx5ConnectionService.dismissNaviMessage(context)
             }
-            "start_ancs" -> {
+            "start_ancs" -> { // to start a ANCS service on Android
                 startAncs()
             }
             else -> {
@@ -284,7 +284,8 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
 
     @SuppressLint("MissingPermission")
     private fun possibleDevice(device: BluetoothDevice): Boolean {
-        return device.name != null && device.name.contains("kawasaki", ignoreCase = true)
+//        return device.name != null && device.name.contains("kawasaki", ignoreCase = true)
+        return true
     }
 
     @SuppressLint("MissingPermission")
@@ -312,8 +313,6 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
             }, 6000)
         }
     }
-
-
 
     private fun startLeScan(bluetoothAdapter: BluetoothAdapter){
         val locationManager: LocationManager? =

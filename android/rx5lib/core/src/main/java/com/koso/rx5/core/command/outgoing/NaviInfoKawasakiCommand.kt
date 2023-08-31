@@ -1,6 +1,7 @@
 package com.koso.rx5.core.command.outgoing
 
-import com.koso.rx5.core.util.Utility
+import android.util.Log
+import com.koso.rx5.core.util.Utility.bytesToHex
 
 
 class NaviInfoKawasakiCommand(
@@ -10,13 +11,13 @@ class NaviInfoKawasakiCommand(
     val distanceunit: Int, //0:km, 1:m, 2:mile, 3:ft, 4:yd, 5-15:RESERVE
     val turntype: Int,          //int
 ) : BaseOutgoingKawasakiCommand() {
-    val bid = 0x14
+    val bid:Int = 0x14
 
 
     override fun header(): ByteArray {
         val payload = payload()
         return concatenateByteArrays(
-            bid.toByteArray(1),
+            0x14.toByteArray(1),
             payload.size.toByteArray(1),
             seqnum.toByteArray(1),
         )
@@ -27,7 +28,7 @@ class NaviInfoKawasakiCommand(
      */
     override fun payload(): ByteArray {
 
-        return concatenateByteArrays(
+        val result = concatenateByteArrays(
             bid.toByteArray(1),
             seqnum.toByteArray(1),
             byteArrayOf(0x05, 0x70),
@@ -37,26 +38,31 @@ class NaviInfoKawasakiCommand(
             byteArrayOf(0x05, 0x72),
             get572()
         )
+
+        return result
     }
 
     private fun get570(): ByteArray {
+        val shift = mode shl 4
+        val modeBits: Int = shift or 0x0F  // OR 00001111(by bit)
         return concatenateByteArrays(
-            byteArrayOf(mode.toByte()),
-            ByteArray(7)
+            byteArrayOf(modeBits.toByte()),
+            ByteArray(7) { i -> 0xff.toByte() }
         )
     }
 
     private fun get571(): ByteArray {
+        val unitBytes = distanceunit or 0xF0
         return concatenateByteArrays(
             turntype.toByteArray(1),
-            distanceunit.toByteArray(1),
+            unitBytes.toByteArray(1),
             turndistance.toByteArray(3),
-            ByteArray(3)
+            ByteArray(3) { i -> 0xff.toByte() }
         )
     }
 
     private fun get572(): ByteArray {
-        return ByteArray(8)
+        return ByteArray(8) {i -> 0xff.toByte()}
     }
 
 }
