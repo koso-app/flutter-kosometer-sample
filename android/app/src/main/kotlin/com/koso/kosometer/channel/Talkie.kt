@@ -22,6 +22,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.google.gson.Gson
 import com.koso.kosometer.ConnectError
+import com.koso.kosometer.model.LogItem
 import com.koso.kosometer.service.BlePeripheralService
 import com.koso.rx5.core.Rx5ConnectionService
 import com.koso.rx5.core.Rx5Device
@@ -31,6 +32,7 @@ import com.koso.rx5.core.command.incoming.RuntimeInfo1Command
 import com.koso.rx5.core.command.incoming.RuntimeInfo2Command
 import com.koso.rx5.core.command.outgoing.NaviInfoCommand
 import com.koso.rx5.core.command.outgoing.NaviInfoKawasakiCommand
+import com.koso.rx5.core.util.Utility
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.loader.FlutterLoader
 import io.flutter.plugin.common.MethodChannel
@@ -49,19 +51,20 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
     private val mLeScanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
             super.onScanResult(callbackType, result)
-            if(result != null) {
+            if (result != null) {
                 val device = result.device
-                if(possibleDevice(device)) {
+                if (possibleDevice(device)) {
                     candidates.add(hashMapOf("name" to device.name, "address" to device.address))
                 }
             }
             sendScanResult(candidates)
         }
+
         override fun onBatchScanResults(results: MutableList<ScanResult>?) {
             super.onBatchScanResults(results)
             results?.forEach {
                 val device = it.device
-                if(possibleDevice(device)) {
+                if (possibleDevice(device)) {
                     candidates.add(hashMapOf("name" to device.name, "address" to device.address))
                 }
             }
@@ -77,24 +80,24 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
     private val handler = MethodChannel.MethodCallHandler { call, result ->
         when (call.method) {
             "scan" -> { // classic scan
-                if(checkBluetoothAvailable()) {
+                if (checkBluetoothAvailable()) {
                     startScan(bluetoothAdapter!!)
                     result.success(null)
-                }else{
+                } else {
                     sendError(ConnectError.bt_fail)
                 }
             }
             "lescan" -> { // BLE scan
-                if(checkBluetoothAvailable()) {
+                if (checkBluetoothAvailable()) {
                     startLeScan(bluetoothAdapter!!)
                     result.success(null)
-                }else{
+                } else {
                     sendError(ConnectError.bt_fail)
                 }
             }
             "stopscan" -> {
-                if(bluetoothAdapter?.isDiscovering == true){
-                    if(bluetoothAdapter?.isDiscovering == true) {
+                if (bluetoothAdapter?.isDiscovering == true) {
+                    if (bluetoothAdapter?.isDiscovering == true) {
                         bluetoothAdapter?.cancelDiscovery()
                         bluetoothAdapter?.bluetoothLeScanner?.stopScan(mLeScanCallback)
                         sendState(Rx5Device.State.Disconnected)
@@ -104,33 +107,33 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
             }
             "connect" -> { // classic connect
                 isLe = false
-                if(checkBluetoothAvailable()) {
+                if (checkBluetoothAvailable()) {
                     val address = call.argument<String>("address")
-                    if(address != null) {
-                        if(bluetoothAdapter?.isDiscovering == true) {
+                    if (address != null) {
+                        if (bluetoothAdapter?.isDiscovering == true) {
                             bluetoothAdapter?.cancelDiscovery()
                             sendState(Rx5Device.State.Disconnected)
                         }
                         handleConnect(address)
                         result.success(null)
                     }
-                }else{
+                } else {
                     sendError(ConnectError.bt_fail)
                 }
             }
             "leconnect" -> { // BLE connect
                 isLe = true
-                if(checkBluetoothAvailable()) {
+                if (checkBluetoothAvailable()) {
                     val address = call.argument<String>("address")
-                    if(address != null) {
-                        if(bluetoothAdapter?.isDiscovering == true){
+                    if (address != null) {
+                        if (bluetoothAdapter?.isDiscovering == true) {
                             bluetoothAdapter?.bluetoothLeScanner?.stopScan(mLeScanCallback)
                             sendState(Rx5Device.State.Disconnected)
                         }
                         handleLeConnect(address)
                         result.success(null)
                     }
-                }else{
+                } else {
                     sendError(ConnectError.bt_fail)
                 }
             }
@@ -176,8 +179,8 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
     fun startAncs() {
         val bluetoothManager: BluetoothManager =
             context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-        if(!bluetoothManager.adapter.isEnabled){
-            Toast.makeText(context,"bluetooth is not enable", Toast.LENGTH_SHORT).show()
+        if (!bluetoothManager.adapter.isEnabled) {
+            Toast.makeText(context, "bluetooth is not enable", Toast.LENGTH_SHORT).show()
             return
         }
         BlePeripheralService.launch(context)
@@ -195,7 +198,12 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
                     val device: BluetoothDevice =
                         intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)!!
                     if (possibleDevice(device)) {
-                        candidates.add(hashMapOf( "name" to device.name, "address" to device.address ))
+                        candidates.add(
+                            hashMapOf(
+                                "name" to device.name,
+                                "address" to device.address
+                            )
+                        )
                         sendScanResult(candidates)
                     }
                 }
@@ -207,7 +215,7 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
     }
 
     private val incomingCommandObserver = Observer<BaseIncomingCommand> {
-        when(it){
+        when (it) {
             is RuntimeInfo1Command -> sendIncomingInfo1(it)
             is RuntimeInfo2Command -> sendIncomingInfo2(it)
         }
@@ -230,7 +238,7 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
         this.state = Rx5Handler.STATE_LIVE.value ?: Rx5Device.State.Disconnected
     }
 
-    fun onDestory(){
+    fun onDestory() {
         Rx5Handler.destory()
         BlePeripheralService.end(context)
         context.unregisterReceiver(receiver)
@@ -242,7 +250,7 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
         channel.invokeMethod("state", state.name)
     }
 
-    private fun sendScanResult(list: List<Map<String, String>>){
+    private fun sendScanResult(list: List<Map<String, String>>) {
         channel.invokeMethod("scanresult", list)
     }
 
@@ -260,6 +268,11 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
         channel.invokeMethod("error", err.name)
     }
 
+    private fun sendLog(log: LogItem) {
+        val json = gson.toJson(log)
+        channel.invokeMethod("log", json)
+    }
+
     // handle start request
     private fun handleConnect(address: String) {
         Rx5Handler.startConnectService(context, address, 10)
@@ -273,7 +286,7 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
         if (bluetoothAdapter == null) {
             sendError(ConnectError.bt_fail)
             return false
-        }else if(!bluetoothAdapter!!.isEnabled){
+        } else if (!bluetoothAdapter!!.isEnabled) {
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             context.startActivityForResult(enableBtIntent, 100)
             return false
@@ -306,7 +319,7 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
             bluetoothAdapter.startDiscovery()
             sendState(Rx5Device.State.Discovering)
             Handler(Looper.getMainLooper()).postDelayed({
-                if(bluetoothAdapter.isDiscovering) {
+                if (bluetoothAdapter.isDiscovering) {
                     bluetoothAdapter.cancelDiscovery()
                     sendState(Rx5Device.State.Disconnected)
                 }
@@ -314,7 +327,7 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
         }
     }
 
-    private fun startLeScan(bluetoothAdapter: BluetoothAdapter){
+    private fun startLeScan(bluetoothAdapter: BluetoothAdapter) {
         val locationManager: LocationManager? =
             context.getSystemService(LOCATION_SERVICE) as LocationManager?
         val isGpsEnabled: Boolean? =
@@ -332,7 +345,7 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
             bluetoothAdapter.bluetoothLeScanner.startScan(mLeScanCallback)
             sendState(Rx5Device.State.Discovering)
             Handler(Looper.getMainLooper()).postDelayed({
-                if(bluetoothAdapter.isDiscovering) {
+                if (bluetoothAdapter.isDiscovering) {
                     bluetoothAdapter.bluetoothLeScanner.stopScan(mLeScanCallback)
                     sendState(Rx5Device.State.Disconnected)
                 }
@@ -343,10 +356,10 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
     private fun findPairedDevices() {
         val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter!!.bondedDevices
         pairedDevices?.forEach { device ->
-            if(possibleDevice(device)){
+            if (possibleDevice(device)) {
                 val deviceName = device.name
                 val deviceHardwareAddress = device.address // MAC address
-                candidates.add(hashMapOf( "name" to deviceName, "address" to deviceHardwareAddress ))
+                candidates.add(hashMapOf("name" to deviceName, "address" to deviceHardwareAddress))
             }
         }
         sendScanResult(candidates)
@@ -361,23 +374,30 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
     // handle naviinfo request
     private fun receiveNaviinfo(naviCmd: String) {
         val cmd = gson.fromJson(naviCmd, NaviInfoCommand::class.java)
-        if(isLe){
+        if (isLe) {
             Rx5Handler.rx5?.writeLe(cmd)
-        }else{
+        } else {
             Rx5Handler.rx5?.write(cmd)
         }
     }
 
-    private fun receiveNaviinfoKawasaki(naviCmd: String){
+    private fun receiveNaviinfoKawasaki(naviCmd: String) {
         val cmd = gson.fromJson(naviCmd, NaviInfoKawasakiCommand::class.java)
         Rx5Handler.rx5?.writeLe(cmd.encode())
-
+        sendLog(
+            LogItem(
+                title = "NaviInfo",
+                content = Utility.bytesToHex(cmd.encode()),
+                hex = Utility.bytesToHex(cmd.encode()),
+                direction = 1
+            )
+        )
     }
 
     companion object {
         var _instance: Talkie? = null
         fun ofEngine(context: Activity, engine: FlutterEngine): Talkie {
-            if(_instance == null) {
+            if (_instance == null) {
                 _instance = Talkie(context, engine)
             }
             return _instance!!

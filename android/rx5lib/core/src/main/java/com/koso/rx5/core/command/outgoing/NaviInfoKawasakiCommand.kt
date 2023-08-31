@@ -27,10 +27,8 @@ class NaviInfoKawasakiCommand(
      * Byte data in the payload is using Big-endian order
      */
     override fun payload(): ByteArray {
-
         val result = concatenateByteArrays(
-            bid.toByteArray(1),
-            seqnum.toByteArray(1),
+            byteArrayOf(0xff.toByte(), 0xff.toByte()),
             byteArrayOf(0x05, 0x70),
             get570(),
             byteArrayOf(0x05, 0x71),

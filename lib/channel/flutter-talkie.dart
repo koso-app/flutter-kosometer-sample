@@ -69,6 +69,11 @@ class FlutterTalkie {
         case 'error':
           _errorSink.add(call.arguments);
           break;
+        case 'log':
+          var json = call.arguments;
+          Map<String, dynamic> map = jsonDecode(json);
+          LogManager.get().push(LogItem.fromJson(map));
+          break;
       }
     });
   }
@@ -79,18 +84,18 @@ class FlutterTalkie {
 
   Future sendScan() async{
     platform.invokeMethod('scan', null);
-    LogManager.get().push(LogItem(title: "scan", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 1));
+    LogManager.get().push(LogItem(title: "scan", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 0));
   }
 
   Future sendLeScan() async{
 
     platform.invokeMethod('lescan');
-    LogManager.get().push(LogItem(title: "le scan", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 1));
+    LogManager.get().push(LogItem(title: "le scan", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 0));
   }
 
   Future sendStopScan() async{
     platform.invokeMethod('stopscan', null);
-    LogManager.get().push(LogItem(title: "stop scan", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 1));
+    LogManager.get().push(LogItem(title: "stop scan", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 0));
   }
 
   Future sendConnect(String address) async {
@@ -103,7 +108,7 @@ class FlutterTalkie {
         connectManager.state = ConnectState.Disconnected;
       }
     });
-    LogManager.get().push(LogItem(title: "connect", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 1));
+    LogManager.get().push(LogItem(title: "connect", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 0));
   }
 
   Future sendLeConnect(String address) async{
@@ -116,12 +121,12 @@ class FlutterTalkie {
             connectManager.state = ConnectState.Disconnected;
           }
         });
-        LogManager.get().push(LogItem(title: "le connect", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 1));
+        LogManager.get().push(LogItem(title: "le connect", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 0));
       }
 
   Future sendEnd() async {
     platform.invokeMethod('disconnect', null);
-    LogManager.get().push(LogItem(title: "end", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 1));
+    LogManager.get().push(LogItem(title: "end", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 0));
   }
 
   Future sendNaviInfo(NaviInfo cmd) {
@@ -141,7 +146,7 @@ class FlutterTalkie {
   }
 
   Future startAncs() async{
-    LogManager.get().push(LogItem(title: "start ANCS", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 1));
+    LogManager.get().push(LogItem(title: "start ANCS", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 0));
     platform.invokeMethod('start_ancs');
   }
 

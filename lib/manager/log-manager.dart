@@ -33,4 +33,11 @@ class LogItem {
   int direction; // send: 1, received: 2, no define: 0
 
   LogItem({required this.title, this.content = '', this.hex = '', required this.timestamp, this.direction = 0});
+
+  LogItem.fromJson(Map<String, dynamic> json)
+      : title = json['title'],
+        content = json['content'],
+        hex = json['hex'],
+        timestamp = json['timestamp'],
+        direction = json['direction'];
 }
