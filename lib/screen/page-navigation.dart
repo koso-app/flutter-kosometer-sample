@@ -160,7 +160,11 @@ class _PageNavigationKawasakiState extends State<PageNavigationKawasaki> {
                   desc: "Mode",
                   defaultText: mode.toString(),
                   callback: (String input) {
-                    mode = int.parse(input);
+                    try {
+                      mode = int.parse(input);
+                    }catch(e){
+                      mode = 1;
+                    }
                   },
                   keyboardType: TextInputType.number,
                 ),
@@ -168,7 +172,11 @@ class _PageNavigationKawasakiState extends State<PageNavigationKawasaki> {
                   desc: "Turn distance",
                   defaultText: turn_distance.toString(),
                   callback: (String input) {
-                    turn_distance = int.parse(input);
+                    try {
+                      turn_distance = int.parse(input);
+                    }catch(e){
+                      turn_distance = 50;
+                    }
                   },
                   keyboardType: TextInputType.number,
                 ),
@@ -176,7 +184,11 @@ class _PageNavigationKawasakiState extends State<PageNavigationKawasaki> {
                   desc: "Distance unit",
                   defaultText: distance_unit.toString(),
                   callback: (String input) {
-                    distance_unit = int.parse(input);
+                    try {
+                      distance_unit = int.parse(input);
+                    }catch(e){
+                      distance_unit = 0;
+                    }
                   },
                   keyboardType: TextInputType.number,
                 ),
@@ -184,7 +196,11 @@ class _PageNavigationKawasakiState extends State<PageNavigationKawasaki> {
                   desc: "Turn type",
                   defaultText: next_type.toString(),
                   callback: (String input) {
-                    next_type = int.parse(input);
+                    try {
+                      next_type = int.parse(input);
+                    }catch(e){
+                      next_type = 1;
+                    }
                   },
                   keyboardType: TextInputType.number,
                 ),

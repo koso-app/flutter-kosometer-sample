@@ -18,7 +18,7 @@ class HomeScreen extends StatelessWidget {
           title: const TabBar(
             tabs: [
               Tab(text: "CONNECT",),
-              Tab(text: "RECEIVED"),
+              // Tab(text: "RECEIVED"),
               Tab(text: "NAVIGATION"),
               Tab(text: "LOG"),
             ],
@@ -28,7 +28,7 @@ class HomeScreen extends StatelessWidget {
         body: const TabBarView(
           children: [
             PageConnect(),
-            PageReceived(),
+            // PageReceived(),
             PageNavigationKawasaki(),
             PageLog()
           ],

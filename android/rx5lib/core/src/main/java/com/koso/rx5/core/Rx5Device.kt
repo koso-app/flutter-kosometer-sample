@@ -26,12 +26,16 @@ import java.util.*
 open class Rx5Device(
     val context: Context,
     val mac: String,
-    val SERVICE_UUID: String = "00001101-0000-1000-8000-00805F9B34FB"
+    val SERVICE_UUID: String = "92faec07-c075-4b7c-a6c2-bbd1d1a150f5" // for bluetooth classic, skip for BLE
 ) {
 
-    val ServiceUuidString = "D88B7688-729D-BDA1-7A46-25F4104626C7"
-    val ReadCharacteristicUuidString = "39D7AFB7-4ED7-4334-D79B-6675D916D7E3"
-    val WriteCharacteristicUuidString = "40E288F6-B367-F64A-A5F7-B4DFEE9F09E7"
+//    val ServiceUuidString = "D88B7688-729D-BDA1-7A46-25F4104626C7"
+//    val ReadCharacteristicUuidString = "39D7AFB7-4ED7-4334-D79B-6675D916D7E3"
+//    val WriteCharacteristicUuidString = "40E288F6-B367-F64A-A5F7-B4DFEE9F09E7"
+    val DATASOURCE_UUID = "3aabbb34-eac0-40f5-9d50-3a1ee6787136"
+    val DATASOURCE_MID_UUID = "5e119eba-35a7-4463-a7af-7fa40a302350"
+    val DATASOURCE_HIGH_UUID = "02fad1bd-358e-441c-b296-fe874af38a7e"
+    val CONTROLPOINT_UUID = "acf1b15c-10f9-4942-a32d-f9e019b95402"
 
     enum class State {
         Disconnected, Discovering, Connected, Connecting
@@ -57,7 +61,9 @@ open class Rx5Device(
     private var cmdListener: IncomingCommandListener? = null
     private var gattService: BluetoothGattService? = null
     private var gattWriteCharacteristic: BluetoothGattCharacteristic? = null
-    private var gattReadCharacteristic: BluetoothGattCharacteristic? = null
+    private var dataCharacteristic: BluetoothGattCharacteristic? = null
+    private var dataMidCharacteristic: BluetoothGattCharacteristic? = null
+    private var dataHighCharacteristic: BluetoothGattCharacteristic? = null
 
 
     private val bluetoothGattCallback = object : BluetoothGattCallback() {
@@ -100,11 +106,15 @@ open class Rx5Device(
         override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
             super.onServicesDiscovered(gatt, status)
             if(status == BluetoothGatt.GATT_SUCCESS){
-                gattService = gatt?.getService(UUID.fromString(ServiceUuidString))
-                gattReadCharacteristic = gattService?.getCharacteristic(UUID.fromString(ReadCharacteristicUuidString))
-                gattWriteCharacteristic = gattService?.getCharacteristic(UUID.fromString(WriteCharacteristicUuidString))
+                gattService = gatt?.getService(UUID.fromString(SERVICE_UUID))
+                dataCharacteristic = gattService?.getCharacteristic(UUID.fromString(DATASOURCE_UUID))
+                dataMidCharacteristic = gattService?.getCharacteristic(UUID.fromString(DATASOURCE_UUID))
+                dataHighCharacteristic = gattService?.getCharacteristic(UUID.fromString(DATASOURCE_UUID))
+                gattWriteCharacteristic = gattService?.getCharacteristic(UUID.fromString(CONTROLPOINT_UUID))
 
-                gatt?.setCharacteristicNotification(gattReadCharacteristic, true)
+                gatt?.setCharacteristicNotification(dataCharacteristic, true)
+                gatt?.setCharacteristicNotification(dataMidCharacteristic, true)
+                gatt?.setCharacteristicNotification(dataHighCharacteristic, true)
             }
         }
 
@@ -266,6 +276,7 @@ open class Rx5Device(
 
     var buffer: MutableList<Byte> = mutableListOf()
 
+    // for bluetooth classic
     open fun connectAsClient(listener: IncomingCommandListener) {
         val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
         val uuid = UUID.fromString(SERVICE_UUID)
@@ -465,7 +476,9 @@ open class Rx5Device(
 
         gattService = null
         gattWriteCharacteristic = null
-        gattReadCharacteristic = null
+        dataCharacteristic = null
+        dataMidCharacteristic = null
+        dataHighCharacteristic = null
 
         // for classic
         compositeDisposable.dispose()
