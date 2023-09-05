@@ -72,8 +72,7 @@ class FlutterTalkie {
           Map<String, dynamic> map = jsonDecode(json);
           var cmd = IncomingUnknow.fromJson(map);
           _incomingSink.add(cmd);
-          keepLastIncomingInfo2(json);
-          LogManager.get().push(LogItem(title: "unknow", content: "${cmd.toString()}", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 2));
+          LogManager.get().push(LogItem(title: "data source", content: cmd.hexString, timestamp: DateTime.now().millisecondsSinceEpoch, direction: 2));
           break;
         case 'error':
           _errorSink.add(call.arguments);

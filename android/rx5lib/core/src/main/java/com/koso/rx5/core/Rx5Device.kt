@@ -37,6 +37,7 @@ open class Rx5Device(
     val DATASOURCE_MID_UUID = "5e119eba-35a7-4463-a7af-7fa40a302350"
     val DATASOURCE_HIGH_UUID = "02fad1bd-358e-441c-b296-fe874af38a7e"
     val CONTROLPOINT_UUID = "acf1b15c-10f9-4942-a32d-f9e019b95402"
+    val CONFIG_DESCRIPTOR = "00002902-0000-1000-8000-00805f9b34fb"
 
     enum class State {
         Disconnected, Discovering, Connected, Connecting
@@ -78,8 +79,7 @@ open class Rx5Device(
 
                     GlobalScope.launch(Dispatchers.IO) {
                         delay(1000)
-                        bluetoothGatt?.requestMtu(220)
-                        delay(5000)
+
                         bluetoothGatt?.discoverServices()
                     }
 
@@ -112,14 +112,31 @@ open class Rx5Device(
 //                dataMidCharacteristic = gattService?.getCharacteristic(UUID.fromString(DATASOURCE_MID_UUID))
 //                dataHighCharacteristic = gattService?.getCharacteristic(UUID.fromString(DATASOURCE_HIGH_UUID))
 //                gattWriteCharacteristic = gattService?.getCharacteristic(UUID.fromString(CONTROLPOINT_UUID))
+                if(dataCharacteristic != null) {
+                    gatt?.requestMtu(242)
+                    gatt?.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH)
 
-                gatt?.setCharacteristicNotification(dataCharacteristic, true)
-                val desc: BluetoothGattDescriptor = dataCharacteristic.getDescriptor(CONFIG_DESCRIPTOR)
-                desc.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
-                gatt!!.writeDescriptor(desc)
+                    GlobalScope.launch {
+                        delay(1000)
+                        val desc: BluetoothGattDescriptor =
+                            dataCharacteristic!!.getDescriptor(UUID.fromString(CONFIG_DESCRIPTOR))
+                        desc.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+                        gatt!!.writeDescriptor(desc)
+                        gatt!!.setCharacteristicNotification(dataCharacteristic, true)
+                    }
+
+                }
 //                gatt?.setCharacteristicNotification(dataMidCharacteristic, true)
 //                gatt?.setCharacteristicNotification(dataHighCharacteristic, true)
             }
+        }
+
+        override fun onDescriptorRead(
+            gatt: BluetoothGatt?,
+            descriptor: BluetoothGattDescriptor?,
+            status: Int
+        ) {
+            super.onDescriptorRead(gatt, descriptor, status)
         }
 
         override fun onCharacteristicChanged(
@@ -130,6 +147,7 @@ open class Rx5Device(
             if(characteristic != null){
 
                 handleInByte(characteristic.value)
+                characteristic.setValue(byteArrayOf())
             }
 
         }

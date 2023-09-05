@@ -28,8 +28,8 @@ byte data[40] = { 0xff, 0x10, 0x24, 0x45, 0x45, 0x37, 0x36, 0x32, 0x44, 0x33,
 BLEService myService("92faec07-c075-4b7c-a6c2-bbd1d1a150f5");
 
 // BLE Battery Level Characteristic
-BLECharacteristic rxChar("acf1b15c-10f9-4942-a32d-f9e019b95402", BLEWrite, 220); // remote clients will be able to get notifications if this characteristic changes
-BLECharacteristic txChar("3aabbb34-eac0-40f5-9d50-3a1ee6787136", BLERead|BLENotify, 220);
+BLECharacteristic rxChar("acf1b15c-10f9-4942-a32d-f9e019b95402", BLEWrite, 242); // remote clients will be able to get notifications if this characteristic changes
+BLECharacteristic txChar("3aabbb34-eac0-40f5-9d50-3a1ee6787136", BLERead | BLENotify, 242);
 
 int oldBatteryLevel = 0;  // last battery level reading from analog input
 long previousMillis = 0;  // last time the battery level was checked, in ms
@@ -66,7 +66,7 @@ void setup() {
   // start advertising
   BLE.advertise();
 
-  Serial.println("Bluetooth device active, waiting for connections...");
+//  Serial.println("Bluetooth device active, waiting for connections...");
 }
 
 void loop() {
@@ -89,7 +89,7 @@ void loop() {
     
       if(rxChar.written()){
         
-        char buffer[220];
+        char buffer[242];
         const uint8_t* data = rxChar.value();
         
         sprintf(buffer,"[%02x,%02x,%02x,%02x,%02x,%02x,%02x,%02x]",data[0],data[1],data[2],data[3],data[4],data[5],data[6],data[7]);
@@ -102,7 +102,7 @@ void loop() {
 
       }
  
-      if (currentMillis - previousMillis >= 3000) {
+      if (currentMillis - previousMillis >= 10000) {
         previousMillis = currentMillis;
         writeData();
       }
@@ -119,8 +119,7 @@ void loop() {
 
 void writeData() {
 
-  txChar.writeValue(data, 40);  // and update the battery level characteristic
-
-
+  txChar.writeValue(data, 100);  // and update the battery level characteristic
+  
   Serial.println("data send");
 }
