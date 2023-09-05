@@ -30,6 +30,7 @@ import com.koso.rx5.core.Rx5Handler
 import com.koso.rx5.core.command.incoming.BaseIncomingCommand
 import com.koso.rx5.core.command.incoming.RuntimeInfo1Command
 import com.koso.rx5.core.command.incoming.RuntimeInfo2Command
+import com.koso.rx5.core.command.incoming.UnknowCommand
 import com.koso.rx5.core.command.outgoing.NaviInfoCommand
 import com.koso.rx5.core.command.outgoing.NaviInfoKawasakiCommand
 import com.koso.rx5.core.util.Utility
@@ -219,6 +220,7 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
         when (it) {
             is RuntimeInfo1Command -> sendIncomingInfo1(it)
             is RuntimeInfo2Command -> sendIncomingInfo2(it)
+            is UnknowCommand -> sendIncomingUnknow(it)
         }
     }
 
@@ -263,6 +265,10 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
     private fun sendIncomingInfo2(cmd: BaseIncomingCommand) {
         val json = gson.toJson(cmd)
         channel.invokeMethod("incominginfo2", json)
+    }
+    private fun sendIncomingUnknow(cmd: BaseIncomingCommand) {
+        val json = gson.toJson(cmd)
+        channel.invokeMethod("incomingunknow", json)
     }
 
     private fun sendError(err: ConnectError) {

@@ -52,5 +52,5 @@ enum class AvailableIncomingCommands(
         0x2B,
         RuntimeInfo1Command::class.java
     ),
-    RuntimeInfo2(0xFF.toByte(), 0x81.toByte(), 0xFF.toByte(), 0x2C, RuntimeInfo2Command::class.java)
+    RuntimeInfo2(0xFF.toByte(), 0x81.toByte(), 0xFF.toByte(), 0x2C, RuntimeInfo2Command::class.java),
 }

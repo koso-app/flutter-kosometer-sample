@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:kosometer/manager/log-manager.dart';
+import 'package:kosometer/transaction/rx5/incoming-unknow.dart';
 import '../transaction/base-incoming.dart';
 import '../transaction/kawasaki/naviinfo.dart';
 import '../transaction/rx5/incoming-info1.dart';
@@ -65,6 +66,14 @@ class FlutterTalkie {
           _incomingSink.add(cmd);
           keepLastIncomingInfo2(json);
           LogManager.get().push(LogItem(title: "incoming info 2", content: "${cmd.toString()}", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 2));
+          break;
+        case 'incomingunknow':
+          var json = call.arguments;
+          Map<String, dynamic> map = jsonDecode(json);
+          var cmd = IncomingUnknow.fromJson(map);
+          _incomingSink.add(cmd);
+          keepLastIncomingInfo2(json);
+          LogManager.get().push(LogItem(title: "unknow", content: "${cmd.toString()}", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 2));
           break;
         case 'error':
           _errorSink.add(call.arguments);
