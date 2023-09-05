@@ -1,4 +1,3 @@
-import '/rx5/base-incoming.dart';
 import 'base-outgoing.dart';
 
 class NaviInfo extends BaseOutgoing {
@@ -6,7 +5,9 @@ class NaviInfo extends BaseOutgoing {
   String ctname;
   String roadname;
   String doornum;
-  int limitsp;
+  int limitms;
+  int limitkmh;
+  int limitmph;
   String nextroadname;
   int nextdist;
   int nextturn;
@@ -16,7 +17,7 @@ class NaviInfo extends BaseOutgoing {
   int gpsnum;
   int gpsdir;
 
-  NaviInfo(this.ctname, this.roadname, this.doornum, this.limitsp, this.nextroadname, this.nextdist,
+  NaviInfo(this.ctname, this.roadname, this.doornum, this.limitms, this.limitkmh, this.limitmph, this.nextroadname, this.nextdist,
       this.nextturn, this.camera, this.navidist, this.navitime, this.gpsnum, this.gpsdir);
 
   NaviInfo.fromJson(Map<String, dynamic> json)
@@ -24,7 +25,9 @@ class NaviInfo extends BaseOutgoing {
         ctname = json['ctname'],
         roadname = json['roadname'],
         doornum = json['doornum'],
-        limitsp = json['limitsp'],
+        limitms = json['limitsp'],
+        limitkmh = json['limitkmh'],
+        limitmph = json['limitmph'],
         nextroadname = json['nextroadname'],
         nextdist = json['nextdist'],
         nextturn = json['nextturn'],
@@ -39,7 +42,9 @@ class NaviInfo extends BaseOutgoing {
         'ctname': ctname,
         'roadname': roadname,
         'doornum': doornum,
-        'limitsp': limitsp,
+        'limitsp': limitms,
+        'limitkmh': limitkmh,
+        'limitmph': limitmph,
         'nextroadname': nextroadname,
         'nextdist': nextdist,
         'nextturn': nextturn,
