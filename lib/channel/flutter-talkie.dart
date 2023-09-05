@@ -85,12 +85,24 @@ class FlutterTalkie {
   Future sendScan() async{
     platform.invokeMethod('scan', null);
     LogManager.get().push(LogItem(title: "scan", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 0));
+    Future.delayed(Duration(seconds: 10)).then((value){
+      if(connectManager.state == ConnectState.Discovering) {
+        sendStopScan();
+        connectManager.state = ConnectState.Disconnected;
+      }
+    });
   }
 
   Future sendLeScan() async{
 
     platform.invokeMethod('lescan');
     LogManager.get().push(LogItem(title: "le scan", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 0));
+    Future.delayed(Duration(seconds: 10)).then((value){
+      if(connectManager.state == ConnectState.Discovering) {
+        sendStopScan();
+        connectManager.state = ConnectState.Disconnected;
+      }
+    });
   }
 
   Future sendStopScan() async{

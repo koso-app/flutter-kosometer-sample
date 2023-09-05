@@ -51,14 +51,15 @@ class _PageConnectState extends State<PageConnect> {
                   return getStateButton(snapshot.data ?? state);
                 })),
         TextButton(
-            onPressed: () {
-              talkie.sendLeScan();
-              showScanDialog();
-            },
-            child: const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text("Scan", style: TextStyle(fontSize: 20)),
-            ),)
+          onPressed: () {
+            talkie.sendLeScan();
+            showScanDialog();
+          },
+          child: const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text("Scan", style: TextStyle(fontSize: 20)),
+          ),
+        )
       ],
     );
   }
@@ -76,7 +77,6 @@ class _PageConnectState extends State<PageConnect> {
             width: double.infinity,
             child: ElevatedButton(
                 onPressed: () {
-
                   var address = Preference.instance().getLastConnectAddress();
                   if (address != null) {
                     talkie.sendLeConnect(address);
@@ -148,9 +148,9 @@ class _PageConnectState extends State<PageConnect> {
           );
         }).then((value) {
       talkie.sendStopScan();
-      // if(connectManager.state != ConnectState.Connected || connectManager.state != ConnectState.Connecting){
-      //   connectManager.state = ConnectState.Disconnected;
-      // }
+      if(connectManager.state != ConnectState.Connected || connectManager.state != ConnectState.Connecting){
+        connectManager.state = ConnectState.Disconnected;
+      }
     });
   }
 
@@ -195,7 +195,7 @@ class _ScanResultsListState extends State<ScanResultsList> {
                 found = true;
               }
             });
-            if (!found) {
+            if (!found && element['name'] != null) {
               candidates.add(element);
             }
           });
