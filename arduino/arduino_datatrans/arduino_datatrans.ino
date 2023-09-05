@@ -102,7 +102,7 @@ void loop() {
 
       }
  
-      if (currentMillis - previousMillis >= 10000) {
+      if (currentMillis - previousMillis >= 200) {
         previousMillis = currentMillis;
         writeData();
       }
