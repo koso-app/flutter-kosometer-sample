@@ -41,10 +41,14 @@ class NaviInfoKawasakiCommand(
     }
 
     private fun get570(): ByteArray {
-        val shift = mode shl 4
-        val modeBits: Int = shift or 0x0F  // OR 00001111(by bit)
+        var modeByte = when(mode){
+            1 -> byteArrayOf(0x1f)
+            2 -> byteArrayOf(0x2f)
+            3 -> byteArrayOf(0x3f)
+            else -> byteArrayOf(0x0f)
+        }
         return concatenateByteArrays(
-            byteArrayOf(modeBits.toByte()),
+            modeByte,
             ByteArray(7) { i -> 0xff.toByte() }
         )
     }
