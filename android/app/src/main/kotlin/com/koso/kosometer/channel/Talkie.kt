@@ -100,7 +100,6 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
                     if (bluetoothAdapter?.isDiscovering == true) {
                         bluetoothAdapter?.cancelDiscovery()
                         bluetoothAdapter?.bluetoothLeScanner?.stopScan(mLeScanCallback)
-                        sendState(Rx5Device.State.Disconnected)
                     }
                 }
                 result.success(null)
@@ -112,9 +111,11 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
                     if (address != null) {
                         if (bluetoothAdapter?.isDiscovering == true) {
                             bluetoothAdapter?.cancelDiscovery()
-                            sendState(Rx5Device.State.Disconnected)
+
                         }
+                        sendState(Rx5Device.State.Connecting)
                         handleConnect(address)
+
                         result.success(null)
                     }
                 } else {
