@@ -1,20 +1,24 @@
 import '../base-incoming.dart';
 
-class IncomingUnknow extends BaseIncoming {
+class IncomingKawasaki extends BaseIncoming {
+  final String title;
   final List<int> raw;
   final String hexString;
 
 
-  IncomingUnknow(
+  IncomingKawasaki(
+      this.title,
       this.raw,
       this.hexString);
 
-  IncomingUnknow.fromJson(Map<String, dynamic> json)
+  IncomingKawasaki.fromJson(Map<String, dynamic> json)
       : raw = (json['raw'] as List).map((e) => e as int).toList(),
-        hexString = json['hexString'];
+        hexString = json['hexString'],
+        title = json['title'];
 
   Map<String, dynamic> toJson() => {
         'hexString': hexString,
         'raw': raw,
+        'title': title,
       };
 }

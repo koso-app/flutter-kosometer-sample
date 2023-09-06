@@ -1,13 +1,10 @@
 package com.koso.rx5.core.command.incoming
 
-import android.util.Log
 import com.koso.rx5.core.util.Utility
-import java.lang.Exception
-import java.nio.ByteBuffer
 
-class UnknowCommand: BaseIncomingCommand() {
+class KawasakiCommand: BaseIncomingCommand() {
 
-
+    var title: String = "DATA SOURCE"
     var raw: ByteArray = byteArrayOf()
     var hexString: String = ""
 
@@ -21,8 +18,8 @@ class UnknowCommand: BaseIncomingCommand() {
         hexString = toString()
     }
 
-    override fun createInstance(): UnknowCommand {
-        return UnknowCommand()
+    override fun createInstance(): KawasakiCommand {
+        return KawasakiCommand()
     }
 
     override fun toString(): String {

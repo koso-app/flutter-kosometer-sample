@@ -10,7 +10,7 @@ import com.github.ivbaranov.rxbluetooth.BluetoothConnection
 import com.github.ivbaranov.rxbluetooth.RxBluetooth
 import com.koso.rx5.core.command.incoming.AvailableIncomingCommands
 import com.koso.rx5.core.command.incoming.BaseIncomingCommand
-import com.koso.rx5.core.command.incoming.UnknowCommand
+import com.koso.rx5.core.command.incoming.KawasakiCommand
 import com.koso.rx5.core.command.outgoing.BaseOutgoingCommand
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -79,7 +79,9 @@ open class Rx5Device(
 
                     GlobalScope.launch(Dispatchers.IO) {
                         delay(1000)
-
+                        gatt?.requestMtu(242)
+                        gatt?.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH)
+                        delay(5000)
                         bluetoothGatt?.discoverServices()
                     }
 
@@ -109,25 +111,43 @@ open class Rx5Device(
             if(status == BluetoothGatt.GATT_SUCCESS){
                 gattService = gatt?.getService(UUID.fromString(SERVICE_UUID))
                 dataCharacteristic = gattService?.getCharacteristic(UUID.fromString(DATASOURCE_UUID))
-//                dataMidCharacteristic = gattService?.getCharacteristic(UUID.fromString(DATASOURCE_MID_UUID))
-//                dataHighCharacteristic = gattService?.getCharacteristic(UUID.fromString(DATASOURCE_HIGH_UUID))
-//                gattWriteCharacteristic = gattService?.getCharacteristic(UUID.fromString(CONTROLPOINT_UUID))
+                dataMidCharacteristic = gattService?.getCharacteristic(UUID.fromString(DATASOURCE_MID_UUID))
+                dataHighCharacteristic = gattService?.getCharacteristic(UUID.fromString(DATASOURCE_HIGH_UUID))
+                gattWriteCharacteristic = gattService?.getCharacteristic(UUID.fromString(CONTROLPOINT_UUID))
                 if(dataCharacteristic != null) {
-                    gatt?.requestMtu(242)
-                    gatt?.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH)
 
                     GlobalScope.launch {
-                        delay(1000)
-                        val desc: BluetoothGattDescriptor =
-                            dataCharacteristic!!.getDescriptor(UUID.fromString(CONFIG_DESCRIPTOR))
-                        desc.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
-                        gatt!!.writeDescriptor(desc)
-                        gatt!!.setCharacteristicNotification(dataCharacteristic, true)
-                    }
+                        if(dataCharacteristic != null) {
 
+                            val desc: BluetoothGattDescriptor =
+                                dataCharacteristic!!.getDescriptor(UUID.fromString(CONFIG_DESCRIPTOR))
+                            desc.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+                            var success = gatt!!.writeDescriptor(desc)
+                            delay(1000)
+                            gatt.setCharacteristicNotification(dataCharacteristic, true)
+                        }
+
+                        if(dataMidCharacteristic != null) {
+                            delay(1000)
+                            val desc1: BluetoothGattDescriptor =
+                                dataMidCharacteristic!!.getDescriptor(UUID.fromString(CONFIG_DESCRIPTOR))
+                            desc1.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+                            var success1 = gatt!!.writeDescriptor(desc1)
+                            delay(1000)
+                            gatt.setCharacteristicNotification(dataMidCharacteristic, true)
+                        }
+
+                        if(dataHighCharacteristic != null) {
+                            delay(1000)
+                            val desc2: BluetoothGattDescriptor =
+                                dataHighCharacteristic!!.getDescriptor(UUID.fromString(CONFIG_DESCRIPTOR))
+                            desc2.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+                            var success2 = gatt!!.writeDescriptor(desc2)
+                            delay(1000)
+                            gatt.setCharacteristicNotification(dataHighCharacteristic, true)
+                        }
+                    }
                 }
-//                gatt?.setCharacteristicNotification(dataMidCharacteristic, true)
-//                gatt?.setCharacteristicNotification(dataHighCharacteristic, true)
             }
         }
 
@@ -146,7 +166,7 @@ open class Rx5Device(
             super.onCharacteristicChanged(gatt, characteristic)
             if(characteristic != null){
 
-                handleInByte(characteristic.value)
+                handleInByte(characteristic)
                 characteristic.setValue(byteArrayOf())
             }
 
@@ -168,34 +188,19 @@ open class Rx5Device(
             super.onCharacteristicWrite(gatt, characteristic, status)
         }
 
-        private fun handleInByte(bytes: ByteArray) {
-            val command = UnknowCommand().apply {
-                this.parseData(bytes)
+        private fun handleInByte(characteristic: BluetoothGattCharacteristic) {
+            val command = KawasakiCommand().apply {
+                this.parseData(characteristic.value)
+                this.title = if(characteristic.uuid.toString().equals(DATASOURCE_HIGH_UUID, true)){
+                    "DATA SOURCE HIGH"
+                } else if(characteristic.uuid.toString().equals(DATASOURCE_MID_UUID, true)) {
+                    "DATA SOURCE MID"
+                } else{
+                    "DATA SOURCE"
+                }
             }
             cmdListener?.onCommandAvailable(command)
-//            bytes.forEach { inByte ->
-//                if ((buffer.size == 0 && inByte == 0xFF.toByte()) || buffer.size > 0) {
-//                    buffer.add(inByte)
-//                }
-//
-//                when {
-//                    buffer.size == 2 -> {
-//                        val available = checkAvailableHead(buffer)
-//                        if (!available) {
-//                            buffer.clear()
-//                        }
-//                    }
-//                    buffer.size > 4 -> {
-//                        val command =
-//                            checkAvailableCommand(buffer)?.classObject?.newInstance()
-//                                ?.create(buffer)
-//                        if (command != null) {
-//                            cmdListener?.onCommandAvailable(command)
-//                            buffer.clear()
-//                        }
-//                    }
-//                }
-//            }
+
 
         }
     }

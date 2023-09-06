@@ -3,11 +3,11 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:kosometer/manager/log-manager.dart';
-import 'package:kosometer/transaction/rx5/incoming-unknow.dart';
 import '../transaction/base-incoming.dart';
 import '../transaction/kawasaki/naviinfo.dart';
 import '../transaction/rx5/incoming-info1.dart';
 import '../transaction/rx5/incoming-info2.dart';
+import '../transaction/rx5/incoming-kawasaki.dart';
 import '../transaction/rx5/naviinfo.dart';
 import '/manager/connect-manager.dart';
 
@@ -67,12 +67,12 @@ class FlutterTalkie {
           keepLastIncomingInfo2(json);
           LogManager.get().push(LogItem(title: "incoming info 2", content: "${cmd.toString()}", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 2));
           break;
-        case 'incomingunknow':
+        case 'incomingkawasaki':
           var json = call.arguments;
           Map<String, dynamic> map = jsonDecode(json);
-          var cmd = IncomingUnknow.fromJson(map);
+          var cmd = IncomingKawasaki.fromJson(map);
           _incomingSink.add(cmd);
-          LogManager.get().push(LogItem(title: "data source", content: cmd.hexString, timestamp: DateTime.now().millisecondsSinceEpoch, direction: 2));
+          LogManager.get().push(LogItem(title: cmd.title, content: cmd.hexString, timestamp: DateTime.now().millisecondsSinceEpoch, direction: 2));
           break;
         case 'error':
           _errorSink.add(call.arguments);
@@ -158,7 +158,7 @@ class FlutterTalkie {
   }
 
   Future sendNaviInfoKawasaki(NaviInfoKawasaki cmd){
-    LogManager.get().push(LogItem(title: "naviinfo-kawasaki", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 1));
+    // LogManager.get().push(LogItem(title: "naviinfo-kawasaki", content: "", timestamp: DateTime.now().millisecondsSinceEpoch, direction: 1));
     var j = json.encode(cmd);
     return platform.invokeMethod('naviinfo-kawasaki', <String, dynamic>{
       'naviinfo-kawasaki': j,
