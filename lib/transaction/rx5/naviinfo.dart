@@ -7,7 +7,9 @@ class NaviInfo extends BaseOutgoing {
   String ctname;
   String roadname;
   String doornum;
-  int limitms;
+  int alertkmh;
+  int alertmph;
+  int limitms; // deprecated
   int limitkmh;
   int limitmph;
   String nextroadname;
@@ -19,7 +21,7 @@ class NaviInfo extends BaseOutgoing {
   int gpsnum;
   int gpsdir;
 
-  NaviInfo(this.ctname, this.roadname, this.doornum, this.limitms, this.limitkmh, this.limitmph, this.nextroadname, this.nextdist,
+  NaviInfo(this.ctname, this.roadname, this.doornum,this.alertkmh, this.alertmph, this.limitms, this.limitkmh, this.limitmph, this.nextroadname, this.nextdist,
       this.nextturn, this.camera, this.navidist, this.navitime, this.gpsnum, this.gpsdir);
 
   NaviInfo.fromJson(Map<String, dynamic> json)
@@ -27,6 +29,8 @@ class NaviInfo extends BaseOutgoing {
         ctname = json['ctname'],
         roadname = json['roadname'],
         doornum = json['doornum'],
+        alertkmh = json['alertkmh'],
+        alertmph = json['alertmph'],
         limitms = json['limitsp'],
         limitkmh = json['limitkmh'],
         limitmph = json['limitmph'],
@@ -44,6 +48,8 @@ class NaviInfo extends BaseOutgoing {
         'ctname': ctname,
         'roadname': roadname,
         'doornum': doornum,
+        'alertkmh': alertkmh,
+        'alertmph': alertmph,
         'limitsp': limitms,
         'limitkmh': limitkmh,
         'limitmph': limitmph,
