@@ -14,6 +14,8 @@ class _PageNavigationState extends State<PageNavigation> {
   String city = "台北市";
   String road = "忠孝東路";
   String house = "12";
+  int alert_kmh = 60;
+  int alert_mph = 37;
   int limit_kmh = 60;
   int limit_mph = 37;
   String next_road = "林森北路";
@@ -56,6 +58,18 @@ class _PageNavigationState extends State<PageNavigation> {
                     defaultText: house,
                     callback: (String input) {
                       house = input;
+                    }),
+                PropertyEditor(
+                    desc: "Alert speed (KMH)",
+                    defaultText: alert_kmh.toString(),
+                    callback: (String input) {
+                      alert_kmh = int.parse(input);
+                    }),
+                PropertyEditor(
+                    desc: "Alert speed (MPH)",
+                    defaultText: alert_mph.toString(),
+                    callback: (String input) {
+                      alert_mph = int.parse(input);
                     }),
                 PropertyEditor(
                     desc: "Limmit speed (KMH)",
@@ -126,7 +140,7 @@ class _PageNavigationState extends State<PageNavigation> {
             height: 48,
             child: ElevatedButton(
                 onPressed: () {
-                  var cmd = NaviInfo(city, road, house, limit_kmh, limit_kmh, limit_mph, next_road, next_turn_distance, next_type,
+                  var cmd = NaviInfo(city, road, house, alert_kmh, alert_mph, limit_kmh, limit_kmh, limit_mph, next_road, next_turn_distance, next_type,
                       camera_distance, total_distance, total_time, satellite, heading);
                   talkie.sendNaviInfo(cmd);
                 },
