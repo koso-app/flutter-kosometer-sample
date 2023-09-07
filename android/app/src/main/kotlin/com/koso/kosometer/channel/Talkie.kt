@@ -31,6 +31,7 @@ import com.koso.rx5.core.command.incoming.BaseIncomingCommand
 import com.koso.rx5.core.command.incoming.RuntimeInfo1Command
 import com.koso.rx5.core.command.incoming.RuntimeInfo2Command
 import com.koso.rx5.core.command.incoming.KawasakiCommand
+import com.koso.rx5.core.command.outgoing.FreeHexKawasakiCommand
 import com.koso.rx5.core.command.outgoing.NaviInfoCommand
 import com.koso.rx5.core.command.outgoing.NaviInfoKawasakiCommand
 import com.koso.rx5.core.util.Utility
@@ -155,6 +156,13 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
                 val json = call.argument<String>("naviinfo-kawasaki")
                 if (json != null) {
                     receiveNaviinfoKawasaki(json)
+                }
+                result.success(null)
+            }
+            "freehex-kawasaki" -> {
+                val json = call.argument<String>("freehex-kawasaki")
+                if (json != null) {
+                    receiveFreehexKawasaki(json)
                 }
                 result.success(null)
             }
@@ -390,15 +398,32 @@ class Talkie private constructor(val context: Activity, engine: FlutterEngine) {
 
     private fun receiveNaviinfoKawasaki(naviCmd: String) {
         val cmd = gson.fromJson(naviCmd, NaviInfoKawasakiCommand::class.java)
-        Rx5Handler.rx5?.writeLe(cmd.encode())
-        sendLog(
-            LogItem(
-                title = "NaviInfo",
-                content = Utility.bytesToHex(cmd.encode()),
-                hex = Utility.bytesToHex(cmd.encode()),
-                direction = 1
+        val success = Rx5Handler.rx5?.writeLe(cmd.encode())
+        if(success == true) {
+            sendLog(
+                LogItem(
+                    title = "NaviInfo",
+                    content = Utility.bytesToHex(cmd.encode()),
+                    hex = Utility.bytesToHex(cmd.encode()),
+                    direction = 1
+                )
             )
-        )
+        }
+    }
+
+    private fun receiveFreehexKawasaki(cmd: String){
+        val cmd = gson.fromJson(cmd, FreeHexKawasakiCommand::class.java)
+        val success = Rx5Handler.rx5?.writeLe(cmd.encode())
+        if(success == true) {
+            sendLog(
+                LogItem(
+                    title = "FreeHex",
+                    content = Utility.bytesToHex(cmd.encode()),
+                    hex = Utility.bytesToHex(cmd.encode()),
+                    direction = 1
+                )
+            )
+        }
     }
 
     companion object {

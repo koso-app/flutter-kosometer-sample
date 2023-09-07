@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:kosometer/manager/log-manager.dart';
+import 'package:kosometer/transaction/kawasaki/freehex.dart';
 import '../transaction/base-incoming.dart';
 import '../transaction/kawasaki/naviinfo.dart';
 import '../transaction/rx5/incoming-info1.dart';
@@ -162,6 +163,13 @@ class FlutterTalkie {
     var j = json.encode(cmd);
     return platform.invokeMethod('naviinfo-kawasaki', <String, dynamic>{
       'naviinfo-kawasaki': j,
+    });
+  }
+
+  Future sendFreeHexKawasaki(FreeHexKawasaki cmd){
+    var j = json.encode(cmd);
+    return platform.invokeMethod('freehex-kawasaki', <String, dynamic>{
+      'freehex-kawasaki': j,
     });
   }
 

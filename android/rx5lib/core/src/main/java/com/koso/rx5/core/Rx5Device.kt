@@ -196,12 +196,10 @@ open class Rx5Device(
                 } else if(characteristic.uuid.toString().equals(DATASOURCE_MID_UUID, true)) {
                     "DATA SOURCE MID"
                 } else{
-                    "DATA SOURCE"
+                    "DATA SOURCE LOW"
                 }
             }
             cmdListener?.onCommandAvailable(command)
-
-
         }
     }
 

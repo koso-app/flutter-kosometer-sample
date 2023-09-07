@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:kosometer/screen/page-log.dart';
+import 'screen/page-freehex.dart';
+import 'screen/page-log.dart';
 
 import 'screen/page-connect.dart';
 import 'screen/page-navigation.dart';
-import 'screen/page-received.dart';
 
 
 class HomeScreen extends StatelessWidget {
@@ -12,13 +12,14 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
           title: const TabBar(
             tabs: [
               Tab(text: "CONNECT",),
               // Tab(text: "RECEIVED"),
+              Tab(text: "FREE HEX"),
               Tab(text: "NAVIGATION"),
               Tab(text: "LOG"),
             ],
@@ -29,6 +30,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             PageConnect(),
             // PageReceived(),
+            PageFreeHex(),
             PageNavigationKawasaki(),
             PageLog()
           ],
