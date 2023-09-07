@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kosometer/channel/flutter-talkie.dart';
+import 'package:kosometer/manager/connect-manager.dart';
 import 'package:kosometer/transaction/kawasaki/freehex.dart';
 import 'package:string_validator/string_validator.dart';
 
@@ -44,12 +45,16 @@ class _PageFreeHexState extends State<PageFreeHex> {
                 width: 200,
                 child: ElevatedButton(
                     onPressed: () {
-                      var text = fieldController.text;
-                      if (isHexadecimal(text)) {
-                        var cmd = FreeHexKawasaki(text);
-                        talkie.sendFreeHexKawasaki(cmd);
-                      }else{
-                        Fluttertoast.showToast(msg: 'invalid hex');
+                      if(connectManager.state != ConnectState.Connected){
+                        Fluttertoast.showToast(msg: 'NO CONNECTION', backgroundColor: Colors.red);
+                      } else {
+                        var text = fieldController.text;
+                        if (isHexadecimal(text)) {
+                          var cmd = FreeHexKawasaki(text);
+                          talkie.sendFreeHexKawasaki(cmd);
+                        } else {
+                          Fluttertoast.showToast(msg: 'invalid hex');
+                        }
                       }
                     },
                     child: const Text('SEND'))),

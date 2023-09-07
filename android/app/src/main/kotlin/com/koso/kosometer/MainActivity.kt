@@ -21,9 +21,9 @@ class MainActivity: FlutterActivity() {
 
     override fun onResume() {
         super.onResume()
-        if(!isNotificationServiceEnabled()){
-            buildNotificationServiceAlertDialog().show()
-        }
+//        if(!isNotificationServiceEnabled()){
+//            buildNotificationServiceAlertDialog().show()
+//        }
     }
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
