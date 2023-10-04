@@ -372,3 +372,4 @@ RX5 turn type mapping to [Google direction API](https://developers.google.com/ma
 |                     |           |                                                              |
 |                     |           |                                                              |
 
+![](icons.png)
