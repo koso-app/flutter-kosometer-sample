@@ -368,8 +368,7 @@ RX5 turn type mapping to [Google direction API](https://developers.google.com/ma
 | uturn-right         |    39     | <img src="./readme-img/img_direction_uturnright.png" style="background-color:black;" width="40" height="40"/> |
 | turn-slight-left    |    32     | <img src="./readme-img/img_direction_turnslightleft.png" style="background-color:black;" width="40" height="40"/> |
 | turn-slight-right   |    33     | <img src="./readme-img/img_direction_turnslightright.png" style="background-color:black;" width="40" height="40"/> |
-| arrival             |    25     |                                                              |
-|                     |           |                                                              |
-|                     |           |                                                              |
+| arrival             |    25     | <img src="./readme-img/img_nav_finish_wh.png" style="background-color:black;" width="40" height="40"/> |
+
 
 ![](icons.png)
